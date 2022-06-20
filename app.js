@@ -4,7 +4,7 @@
       id: 0,
       name: 'Ashton',
       age: 25,
-      job: 'Plumbers',
+      job: 'Broadway bash',
       images: ['images/testpic4.jpg', 'images/testpic2.jpg', 'images/testpic1.jpg'],
       distance: 25,
       description: 'Its Lit here, come hang with the Bros'
@@ -13,7 +13,7 @@
       id: 1,
       name: 'Jess',
       age: 28,
-      job: 'Girl Boss',
+      job: 'Local Pub',
       images: ['images/testpic2.jpg', 'images/testpic4.jpg'],
       distance: 4,
       description: 'Its LIT at over here, with the girls'
@@ -22,7 +22,7 @@
       id: 2,
       name: 'Thor',
       age: 21,
-      job: 'Son of lighting God',
+      job: 'Percy Priest Beach',
       images: ['images/testpic3.jpg', 'images/testpic2.jpg'],
       distance: 9,
       description: 'We got here just in time'
@@ -31,7 +31,7 @@
       id: 3,
       name: 'Sloan',
       age: 24,
-      job: 'Influencer',
+      job: 'Lake WaterFall hike',
       images: ['images/testpic1.jpg', 'images/testpic2.jpg'],
       distance: 2455,
       description: 'Follow me on my Instagram 📸, be featured in my shots tonight'
