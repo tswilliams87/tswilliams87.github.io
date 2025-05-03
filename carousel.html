@@ -46,6 +46,20 @@
       font-size: 24px;
       margin: 0;
     }
+
+    .edit-profile-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .edit-profile-btn:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
@@ -54,10 +68,12 @@
     <div id="carousel" class="carousel">
       <!-- Cards will be dynamically added here -->
     </div>
+    <button id="edit-profile-btn" class="edit-profile-btn">Edit Profile</button>
   </div>
 
   <script>
     const carousel = document.getElementById('carousel');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
 
     // Fetch profiles from localStorage, or use fallback profiles in guest mode
     const profiles = JSON.parse(localStorage.getItem('profiles')) || [
@@ -65,6 +81,8 @@
       { name: "Guest User 2", picture: "images/guest2.jpg" },
       { name: "Guest User 3", picture: "images/guest3.jpg" },
     ];
+
+    let currentIndex = 0;
 
     // Add profiles to the carousel
     profiles.forEach((profile, index) => {
@@ -77,8 +95,6 @@
       card.dataset.index = index;
       carousel.appendChild(card);
     });
-
-    let currentIndex = 0;
 
     function updateCards() {
       const cards = document.querySelectorAll('.card');
@@ -122,6 +138,13 @@
           updateCards();
         }
       }
+    });
+
+    // Edit Profile Button Logic
+    editProfileBtn.addEventListener('click', () => {
+      const currentProfile = profiles[currentIndex];
+      localStorage.setItem('editProfile', JSON.stringify(currentProfile));
+      window.location.href = 'create-profile.html';
     });
   </script>
 </body>

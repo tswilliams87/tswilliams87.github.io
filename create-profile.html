@@ -8,33 +8,64 @@
 </head>
 <body>
   <div class="create-profile-container">
-    <h1>Create Your Profile</h1>
+    <h1>Create or Edit Your Profile</h1>
     <form id="create-profile-form">
       <input type="text" name="name" placeholder="Enter Name" required />
-      <input type="file" name="picture" accept="image/*" required />
+      <input type="file" name="picture" accept="image/*" />
       <button type="submit">Submit</button>
     </form>
   </div>
 
   <script>
-    document.getElementById('create-profile-form').addEventListener('submit', (event) => {
-      event.preventDefault();
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('create-profile-form');
 
-      const name = event.target.name.value;
-      const picture = URL.createObjectURL(event.target.picture.files[0]);
+      // Check if editing an existing profile
+      const editProfile = JSON.parse(localStorage.getItem('editProfile'));
+      if (editProfile) {
+        form.name.value = editProfile.name;
+        // Note: File inputs cannot be pre-filled for security reasons
+      }
 
-      // Create a new profile object
-      const profile = { name, picture };
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
 
-      // Fetch existing profiles from localStorage
-      let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
-      profiles.push(profile); // Add the new profile to the array
+        const name = form.name.value;
+        const picture = form.picture.files.length > 0
+          ? URL.createObjectURL(form.picture.files[0])
+          : editProfile ? editProfile.picture : ""; // Use old picture if no new one is uploaded
 
-      // Save updated profiles array to localStorage
-      localStorage.setItem('profiles', JSON.stringify(profiles));
+        // Ensure the picture field is not empty
+        if (!picture) {
+          alert("Please upload a profile picture.");
+          return;
+        }
 
-      // Redirect to the carousel page
-      window.location.href = 'carousel.html';
+        const profile = { name, picture };
+
+        // Fetch profiles from localStorage
+        let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
+
+        if (editProfile) {
+          // Update the existing profile
+          const index = profiles.findIndex(p => p.name === editProfile.name && p.picture === editProfile.picture);
+          if (index !== -1) {
+            profiles[index] = profile;
+          }
+        } else {
+          // Add new profile
+          profiles.push(profile);
+        }
+
+        // Save updated profiles back to localStorage
+        localStorage.setItem('profiles', JSON.stringify(profiles));
+
+        // Clear editProfile data
+        localStorage.removeItem('editProfile');
+
+        // Redirect to carousel
+        window.location.href = 'carousel.html';
+      });
     });
   </script>
 </body>
