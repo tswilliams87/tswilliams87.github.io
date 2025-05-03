@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="app/styles.css">
+  <style>
+    .navbar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+      -webkit-transition: color 0.3s ease;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .welcome-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .welcome-container h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .welcome-container p {
+      font-size: 18px;
+    }
+
+    .welcome-container a {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      -webkit-transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease;
+    }
+
+    .welcome-container a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <a href="carousel.html">Home</a>
+    <a href="create-profile.html">Create Profile</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <!-- Welcome Section -->
+  <div class="welcome-container">
+    <h1>Welcome to the Profile Carousel</h1>
+    <p>Explore profiles, create your own, and connect with others!</p>
+    <a href="carousel.html">Go to Carousel</a>
+  </div>
+</body>
+</html>
