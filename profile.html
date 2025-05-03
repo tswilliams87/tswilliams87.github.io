@@ -8,7 +8,7 @@
   <style>
     .navbar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
       padding: 10px 20px;
       background-color: #f8f9fa;
@@ -16,22 +16,16 @@
     }
 
     .navbar a {
-      margin-left: 15px;
+      margin: 0 15px;
       text-decoration: none;
       color: #007bff;
       font-weight: bold;
+      -webkit-transition: color 0.3s ease;
+      transition: color 0.3s ease;
     }
 
     .navbar a:hover {
       text-decoration: underline;
-    }
-
-    .profile-thumbnail {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-left: 20px;
-      cursor: pointer;
     }
 
     .profile-container {
@@ -52,7 +46,6 @@
   </style>
 </head>
 <body>
-  <!-- Navigation Bar -->
   <div class="navbar">
     <a href="home.html">Home</a>
     <a href="carousel.html">Carousel</a>
@@ -60,14 +53,12 @@
     <a href="profile.html">Profile</a>
   </div>
 
-  <!-- Profile Information -->
   <div class="profile-container">
     <img id="profile-picture" src="images/default-thumbnail.jpg" alt="Profile Picture">
     <h2 id="profile-name">Guest User</h2>
   </div>
 
   <script>
-    // Fetch current user's profile
     const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
     const currentUser = profiles.length > 0 ? profiles[profiles.length - 1] : null;
 
