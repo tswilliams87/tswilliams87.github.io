@@ -3,59 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Milkshakes</title>
+  <title>Carousel</title>
   <link rel="stylesheet" href="app/styles.css">
   <style>
-    .navbar {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #f8f9fa;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: bold;
-      -webkit-transition: color 0.3s ease;
-      transition: color 0.3s ease;
-    }
-
-    .navbar a:hover {
-      text-decoration: underline;
-    }
-
     .carousel-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-    }
-
-    .carousel {
-      position: relative;
-      width: 300px;
-      height: 400px;
-      overflow: hidden;
+      text-align: center;
     }
 
     .card {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: white;
+      position: relative;
+      width: 300px;
+      height: 400px;
+      background-color: #f9f9f9;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      text-align: center;
-      -webkit-transition: transform 0.3s ease, opacity 0.3s ease;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      align-items: center;
+      overflow: hidden;
     }
 
     .card img {
@@ -63,7 +34,6 @@
       height: auto;
       border-radius: 50%;
       margin-bottom: 10px;
-      -webkit-border-radius: 50%;
     }
 
     .card h2 {
@@ -76,20 +46,23 @@
       margin: 0;
     }
 
-    .edit-profile-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #007bff;
+    .popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.7);
       color: #fff;
-      border: none;
+      padding: 10px 20px;
       border-radius: 5px;
-      cursor: pointer;
-      -webkit-transition: background-color 0.3s ease;
-      transition: background-color 0.3s ease;
+      font-size: 18px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
     }
 
-    .edit-profile-btn:hover {
-      background-color: #0056b3;
+    .popup.show {
+      opacity: 1;
     }
   </style>
 </head>
@@ -105,46 +78,60 @@
     <div id="carousel" class="carousel">
       <!-- Cards will be dynamically added here -->
     </div>
-    <button id="edit-profile-btn" class="edit-profile-btn">Edit Profile</button>
   </div>
 
   <script>
     const carousel = document.getElementById('carousel');
-    const editProfileBtn = document.getElementById('edit-profile-btn');
-
     const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
 
     let currentIndex = 0;
 
-    profiles.forEach((profile, index) => {
+    function createCard(profile) {
       const card = document.createElement('div');
       card.className = 'card';
-      card.innerHTML = `
-        <img src="${profile.picture}" alt="${profile.name}">
-        <h2>${profile.name}</h2>
-        <p>Favorite: ${profile.favoriteThing}</p>
-      `;
-      card.dataset.index = index;
-      carousel.appendChild(card);
-    });
 
-    function updateCards() {
-      const cards = document.querySelectorAll('.card');
-      cards.forEach((card, index) => {
-        if (index === currentIndex) {
-          card.style.transform = 'translateX(0)';
-          card.style.opacity = '1';
-        } else if (index < currentIndex) {
-          card.style.transform = 'translateX(-100%)';
-          card.style.opacity = '0';
-        } else {
-          card.style.transform = 'translateX(100%)';
-          card.style.opacity = '0';
-        }
-      });
+      const img = document.createElement('img');
+      img.src = profile.picture;
+      img.alt = profile.name;
+
+      const name = document.createElement('h2');
+      name.textContent = profile.name;
+
+      const favorite = document.createElement('p');
+      favorite.textContent = `Favorite: ${profile.favoriteThing}`;
+
+      const popup = document.createElement('div');
+      popup.className = 'popup';
+
+      card.appendChild(img);
+      card.appendChild(name);
+      card.appendChild(favorite);
+      card.appendChild(popup);
+
+      return card;
     }
 
-    updateCards();
+    function updateCarousel() {
+      carousel.innerHTML = '';
+      if (currentIndex < profiles.length) {
+        const currentProfile = profiles[currentIndex];
+        const card = createCard(currentProfile);
+        carousel.appendChild(card);
+      } else {
+        carousel.innerHTML = '<p>No more profiles</p>';
+      }
+    }
+
+    function showPopup(card, message) {
+      const popup = card.querySelector('.popup');
+      popup.textContent = message;
+      popup.classList.add('show');
+      setTimeout(() => {
+        popup.classList.remove('show');
+        currentIndex++;
+        updateCarousel();
+      }, 1000);
+    }
 
     let startX = 0;
 
@@ -155,25 +142,18 @@
     carousel.addEventListener('touchend', (event) => {
       const endX = event.changedTouches[0].clientX;
       const diffX = endX - startX;
+      const card = carousel.querySelector('.card');
 
       if (diffX > 50) {
-        if (currentIndex > 0) {
-          currentIndex--;
-          updateCards();
-        }
+        // Swipe right
+        showPopup(card, 'please');
       } else if (diffX < -50) {
-        if (currentIndex < profiles.length - 1) {
-          currentIndex++;
-          updateCards();
-        }
+        // Swipe left
+        showPopup(card, 'nope');
       }
     });
 
-    editProfileBtn.addEventListener('click', () => {
-      const currentProfile = profiles[currentIndex];
-      localStorage.setItem('editProfile', JSON.stringify(currentProfile));
-      window.location.href = 'create-profile.html';
-    });
+    updateCarousel();
   </script>
 </body>
 </html>
