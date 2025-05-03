@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carousel</title>
+  <link rel="stylesheet" href="app/styles.css">
+</head>
+<body>
+  <div class="carousel-container">
+    <h1>Welcome to the Carousel</h1>
+    <div id="profile-info"></div>
+    <button id="edit-profile-btn">Edit Profile</button>
+    <div id="carousel">
+      <!-- Carousel images will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <script>
+    const profileInfo = document.getElementById('profile-info');
+    const profile = JSON.parse(localStorage.getItem('profile'));
+
+    if (profile) {
+      profileInfo.innerHTML = `
+        <div>
+          <h2>${profile.name}</h2>
+          <img src="${profile.picture}" alt="${profile.name}" width="100" height="100">
+        </div>
+      `;
+    } else {
+      profileInfo.innerHTML = '<p>Guest User</p>';
+    }
+
+    // Redirect to edit-profile.html when Edit Profile button is clicked
+    document.getElementById('edit-profile-btn').addEventListener('click', () => {
+      window.location.href = 'edit-profile.html';
+    });
+
+    // Carousel logic here...
+  </script>
+</body>
+</html>

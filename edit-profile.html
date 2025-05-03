@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="app/styles.css">
+</head>
+<body>
+  <div class="edit-profile-container">
+    <h1>Edit Your Profile</h1>
+    <form id="edit-profile-form">
+      <input type="text" name="name" id="name" placeholder="Enter Name" required />
+      <input type="file" name="picture" id="picture" accept="image/*" />
+      <button type="submit">Save Changes</button>
+    </form>
+  </div>
+
+  <script>
+    const profile = JSON.parse(localStorage.getItem('profile'));
+
+    // Pre-fill the form with existing profile data
+    if (profile) {
+      document.getElementById('name').value = profile.name;
+    }
+
+    document.getElementById('edit-profile-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const name = event.target.name.value;
+      const pictureInput = event.target.picture.files[0];
+      const picture = pictureInput ? URL.createObjectURL(pictureInput) : profile.picture;
+
+      // Update the profile in localStorage
+      const updatedProfile = { name, picture };
+      localStorage.setItem('profile', JSON.stringify(updatedProfile));
+
+      // Redirect back to carousel
+      window.location.href = 'carousel.html';
+    });
+  </script>
+</body>
+</html>
