@@ -57,14 +57,14 @@
   </div>
 
   <script>
-    const profiles = [
-      { name: "Alice", picture: "images/alice.jpg" },
-      { name: "Bob", picture: "images/bob.jpg" },
-      { name: "Charlie", picture: "images/charlie.jpg" },
-      // Add more profiles as needed
-    ];
-
     const carousel = document.getElementById('carousel');
+
+    // Fetch profiles from localStorage, or use fallback profiles in guest mode
+    const profiles = JSON.parse(localStorage.getItem('profiles')) || [
+      { name: "Guest User 1", picture: "images/guest1.jpg" },
+      { name: "Guest User 2", picture: "images/guest2.jpg" },
+      { name: "Guest User 3", picture: "images/guest3.jpg" },
+    ];
 
     // Add profiles to the carousel
     profiles.forEach((profile, index) => {

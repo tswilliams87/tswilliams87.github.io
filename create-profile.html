@@ -23,9 +23,15 @@
       const name = event.target.name.value;
       const picture = URL.createObjectURL(event.target.picture.files[0]);
 
-      // Save profile data to localStorage
+      // Create a new profile object
       const profile = { name, picture };
-      localStorage.setItem('profile', JSON.stringify(profile));
+
+      // Fetch existing profiles from localStorage
+      let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
+      profiles.push(profile); // Add the new profile to the array
+
+      // Save updated profiles array to localStorage
+      localStorage.setItem('profiles', JSON.stringify(profiles));
 
       // Redirect to the carousel page
       window.location.href = 'carousel.html';
