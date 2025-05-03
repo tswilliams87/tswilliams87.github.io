@@ -6,10 +6,9 @@
   <title>Create Profile</title>
   <link rel="stylesheet" href="app/styles.css">
   <style>
-    /* Navigation styling */
     .navbar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-around;
       align-items: center;
       padding: 10px 20px;
       background-color: #f8f9fa;
@@ -17,10 +16,11 @@
     }
 
     .navbar a {
-      margin-left: 15px;
       text-decoration: none;
       color: #007bff;
       font-weight: bold;
+      -webkit-transition: color 0.3s ease;
+      transition: color 0.3s ease;
     }
 
     .navbar a:hover {
@@ -31,11 +31,10 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      margin-left: 20px;
       cursor: pointer;
+      -webkit-border-radius: 50%;
     }
 
-    /* Main container styling */
     .create-profile-container {
       margin: 50px auto;
       max-width: 400px;
@@ -53,6 +52,8 @@
       margin-bottom: 10px;
       padding: 10px;
       font-size: 16px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
     }
 
     button {
@@ -62,6 +63,8 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      -webkit-transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -70,21 +73,18 @@
   </style>
 </head>
 <body>
-  <!-- Navigation Bar -->
   <div class="navbar">
-    <a href="home.html">Home</a>
-    <a href="carousel.html">Carousel</a>
+    <a href="carousel.html">Home</a>
     <a href="create-profile.html">Create Profile</a>
     <a href="profile.html">Profile</a>
-    <img id="profile-thumbnail" class="profile-thumbnail" src="images/default-thumbnail.jpg" alt="Profile Thumbnail" title="Go to Profile" />
   </div>
 
-  <!-- Profile Creation Form -->
   <div class="create-profile-container">
     <h1>Create or Edit Your Profile</h1>
     <form id="create-profile-form">
       <input type="text" name="name" placeholder="Enter Name" required />
       <input type="file" name="picture" accept="image/*" />
+      <input type="text" name="favoriteThing" placeholder="Favorite Thing to Do" required />
       <button type="submit">Submit</button>
     </form>
   </div>
@@ -92,65 +92,39 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('create-profile-form');
-      const profileThumbnail = document.getElementById('profile-thumbnail');
 
-      // Check if editing an existing profile
       const editProfile = JSON.parse(localStorage.getItem('editProfile'));
       if (editProfile) {
         form.name.value = editProfile.name;
-        // Note: File inputs cannot be pre-filled for security reasons
+        form.favoriteThing.value = editProfile.favoriteThing;
       }
 
-      // Display current user's profile thumbnail
-      const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
-      const currentUser = profiles.length > 0 ? profiles[profiles.length - 1] : null; // Assuming the last created profile is the logged-in user
-      if (currentUser && currentUser.picture) {
-        profileThumbnail.src = currentUser.picture;
-      }
-
-      // Add click event to redirect to profile page
-      profileThumbnail.addEventListener('click', () => {
-        window.location.href = 'profile.html';
-      });
-
-      // Form submit logic
       form.addEventListener('submit', (event) => {
         event.preventDefault();
 
         const name = form.name.value;
+        const favoriteThing = form.favoriteThing.value;
         const picture = form.picture.files.length > 0
           ? URL.createObjectURL(form.picture.files[0])
-          : editProfile ? editProfile.picture : ""; // Use old picture if no new one is uploaded
+          : editProfile ? editProfile.picture : "";
 
-        // Ensure the picture field is not empty
         if (!picture) {
           alert("Please upload a profile picture.");
           return;
         }
 
-        const profile = { name, picture };
+        const profile = { name, picture, favoriteThing };
 
-        // Fetch profiles from localStorage
         let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
-
         if (editProfile) {
-          // Update the existing profile
           const index = profiles.findIndex(p => p.name === editProfile.name && p.picture === editProfile.picture);
-          if (index !== -1) {
-            profiles[index] = profile;
-          }
+          if (index !== -1) profiles[index] = profile;
         } else {
-          // Add new profile
           profiles.push(profile);
         }
 
-        // Save updated profiles back to localStorage
         localStorage.setItem('profiles', JSON.stringify(profiles));
-
-        // Clear editProfile data
         localStorage.removeItem('editProfile');
-
-        // Redirect to carousel
         window.location.href = 'carousel.html';
       });
     });
