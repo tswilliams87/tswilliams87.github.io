@@ -6,13 +6,46 @@
   <title>Carousel</title>
   <link rel="stylesheet" href="app/styles.css">
   <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+      -webkit-transition: color 0.3s ease;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
     .carousel-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      text-align: center;
+      padding-top: 80px; /* Adjust for navbar height */
+      box-sizing: border-box;
     }
 
     .card {
@@ -67,12 +100,14 @@
   </style>
 </head>
 <body>
+  <!-- Navigation Bar -->
   <div class="navbar">
     <a href="carousel.html">Home</a>
     <a href="create-profile.html">Create Profile</a>
     <a href="profile.html">Profile</a>
   </div>
 
+  <!-- Carousel Section -->
   <div class="carousel-container">
     <h1>Swipe Left or Right</h1>
     <div id="carousel" class="carousel">
