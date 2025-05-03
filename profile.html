@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="app/styles.css">
+  <style>
+    .navbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar a {
+      margin-left: 15px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .profile-thumbnail {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+
+    .profile-container {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .profile-container img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+    }
+
+    .profile-container h2 {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="carousel.html">Carousel</a>
+    <a href="create-profile.html">Create Profile</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <!-- Profile Information -->
+  <div class="profile-container">
+    <img id="profile-picture" src="images/default-thumbnail.jpg" alt="Profile Picture">
+    <h2 id="profile-name">Guest User</h2>
+  </div>
+
+  <script>
+    // Fetch current user's profile
+    const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
+    const currentUser = profiles.length > 0 ? profiles[profiles.length - 1] : null;
+
+    const profilePicture = document.getElementById('profile-picture');
+    const profileName = document.getElementById('profile-name');
+
+    if (currentUser) {
+      profilePicture.src = currentUser.picture;
+      profileName.textContent = currentUser.name;
+    }
+  </script>
+</body>
+</html>

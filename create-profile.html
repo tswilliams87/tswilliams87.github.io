@@ -5,8 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Profile</title>
   <link rel="stylesheet" href="app/styles.css">
+  <style>
+    /* Navigation styling */
+    .navbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar a {
+      margin-left: 15px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .profile-thumbnail {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+
+    /* Main container styling */
+    .create-profile-container {
+      margin: 50px auto;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="carousel.html">Carousel</a>
+    <a href="create-profile.html">Create Profile</a>
+    <a href="profile.html">Profile</a>
+    <img id="profile-thumbnail" class="profile-thumbnail" src="images/default-thumbnail.jpg" alt="Profile Thumbnail" title="Go to Profile" />
+  </div>
+
+  <!-- Profile Creation Form -->
   <div class="create-profile-container">
     <h1>Create or Edit Your Profile</h1>
     <form id="create-profile-form">
@@ -19,6 +92,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('create-profile-form');
+      const profileThumbnail = document.getElementById('profile-thumbnail');
 
       // Check if editing an existing profile
       const editProfile = JSON.parse(localStorage.getItem('editProfile'));
@@ -27,6 +101,19 @@
         // Note: File inputs cannot be pre-filled for security reasons
       }
 
+      // Display current user's profile thumbnail
+      const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
+      const currentUser = profiles.length > 0 ? profiles[profiles.length - 1] : null; // Assuming the last created profile is the logged-in user
+      if (currentUser && currentUser.picture) {
+        profileThumbnail.src = currentUser.picture;
+      }
+
+      // Add click event to redirect to profile page
+      profileThumbnail.addEventListener('click', () => {
+        window.location.href = 'profile.html';
+      });
+
+      // Form submit logic
       form.addEventListener('submit', (event) => {
         event.preventDefault();
 
