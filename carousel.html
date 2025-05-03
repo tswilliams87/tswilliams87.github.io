@@ -10,7 +10,6 @@
   <div class="carousel-container">
     <h1>Welcome to the Carousel</h1>
     <div id="profile-info"></div>
-    <button id="edit-profile-btn">Edit Profile</button>
     <div id="carousel">
       <!-- Carousel images will be dynamically inserted here -->
     </div>
@@ -20,6 +19,7 @@
     const profileInfo = document.getElementById('profile-info');
     const profile = JSON.parse(localStorage.getItem('profile'));
 
+    // Show guest user info if no profile exists
     if (profile) {
       profileInfo.innerHTML = `
         <div>
@@ -31,12 +31,22 @@
       profileInfo.innerHTML = '<p>Guest User</p>';
     }
 
-    // Redirect to edit-profile.html when Edit Profile button is clicked
-    document.getElementById('edit-profile-btn').addEventListener('click', () => {
-      window.location.href = 'edit-profile.html';
-    });
+    // Sample carousel items (replace with real dynamic data if necessary)
+    const carouselItems = [
+      'images/testpic1.jpg',
+      'images/testpic2.jpg',
+      'images/testpic3.jpg',
+    ];
 
-    // Carousel logic here...
+    const carousel = document.getElementById('carousel');
+    carouselItems.forEach(image => {
+      const imgElement = document.createElement('img');
+      imgElement.src = image;
+      imgElement.alt = 'Carousel Item';
+      imgElement.width = 300;
+      imgElement.height = 200;
+      carousel.appendChild(imgElement);
+    });
   </script>
 </body>
 </html>
