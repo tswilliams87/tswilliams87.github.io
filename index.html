@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milkshake</title>
-  <link rel="stylesheet" href="app/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiles App</title>
+    <script src="main.js" type="module" defer></script>
 </head>
 <body>
-  <div class="landing-container">
-    <h1>Welcome to the Milkshake that brings all the boys to the Yard</h1>
-    <div class="landing-options">
-      <button id="create-profile-btn">Create Profile</button>
-      <button id="continue-guest-btn">Continue as Guest</button>
-    </div>
-  </div>
+    <h1>Profiles</h1>
+    <ul id="profile-list"></ul>
 
-  <script>
-    document.getElementById('create-profile-btn').addEventListener('click', () => {
-      window.location.href = 'create-profile.html';
-    });
+    <h2>Add a Profile</h2>
+    <form id="add-profile-form">
+        <input type="text" id="name" placeholder="Name" required />
+        <input type="text" id="favoriteThing" placeholder="Favorite Thing" required />
+        <button type="submit">Add Profile</button>
+    </form>
 
-    document.getElementById('continue-guest-btn').addEventListener('click', () => {
-      // Navigate directly to the carousel page
-      window.location.href = 'carousel.html';
-    });
-  </script>
+    <script>
+        // Example to handle adding a profile
+        document.getElementById('add-profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const favoriteThing = document.getElementById('favoriteThing').value;
+
+            try {
+                const newProfile = { name, favoriteThing };
+                const result = await addProfile(newProfile);
+                console.log('Profile added:', result);
+            } catch (error) {
+                console.error('Error adding profile:', error);
+            }
+        });
+    </script>
 </body>
 </html>
