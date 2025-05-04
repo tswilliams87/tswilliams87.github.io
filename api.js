@@ -1,70 +1,62 @@
-// Base API URL (replace with your API Gateway URL if different)
-const API_BASE_URL = "https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/";
+const API_BASE_URL = 'https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles';
 
-// Function to fetch all profiles
-export const fetchProfiles = async () => {
+// Fetch the latest profile ID from the backend
+export async function getLastProfileId() {
     try {
-        const response = await fetch(`${API_BASE_URL}profiles`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
+        const response = await fetch(`${API_BASE_URL}/latest-id`, {
+            method: 'GET',
         });
 
         if (!response.ok) {
-            throw new Error(`Error fetching profiles: ${response.statusText}`);
+            throw new Error(`Failed to fetch the latest profile ID. Status: ${response.status}`);
         }
 
         const data = await response.json();
-        return data;
+        return parseInt(data.lastId, 10); // Convert the latest ID to an integer
     } catch (error) {
-        console.error("Error:", error);
+        console.error('Error fetching the latest profile ID:', error);
         throw error;
     }
-};
+}
 
-// Function to add a new profile
-export const addProfile = async (profile) => {
+// Add a new profile
+export async function addProfile(profile) {
     try {
-        const response = await fetch(`${API_BASE_URL}profiles`, {
-            method: "POST",
+        const response = await fetch(API_BASE_URL, {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(profile),
         });
 
         if (!response.ok) {
-            throw new Error(`Error adding profile: ${response.statusText}`);
+            const errorMessage = `Failed to save profile. Status: ${response.status}`;
+            console.error(errorMessage);
+            throw new Error(errorMessage);
         }
 
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error("Error:", error);
+        console.error('Error adding profile:', error);
         throw error;
     }
-};
+}
 
-// Function to update a profile by ID
-export const updateProfile = async (profileId, updatedProfile) => {
+// Fetch all profiles (for potential use in other pages)
+export async function getAllProfiles() {
     try {
-        const response = await fetch(`${API_BASE_URL}profiles/${profileId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedProfile),
+        const response = await fetch(API_BASE_URL, {
+            method: 'GET',
         });
 
         if (!response.ok) {
-            throw new Error(`Error updating profile: ${response.statusText}`);
+            throw new Error(`Failed to fetch profiles. Status: ${response.status}`);
         }
 
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error("Error:", error);
+        console.error('Error fetching profiles:', error);
         throw error;
     }
-};
+}
