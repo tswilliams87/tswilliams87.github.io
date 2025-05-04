@@ -1,0 +1,49 @@
+//This is a backup of the last working before all the other stuff was added
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+
+const dynamoDBClient = new DynamoDBClient({ region: process.env.AWS_REGION });
+
+export const handler = async (event) => {
+    try {
+        // Extract the DynamoDB table name from the environment variables
+        const tableName = process.env.TABLE_NAME;
+
+        // Parse the request body
+        const body = JSON.parse(event.body);
+
+        // Prepare the parameters for the PutItemCommand
+        const params = {
+            TableName: tableName,
+            Item: {
+                id: { S: body.id },
+                name: { S: body.name },
+                picture: { S: body.picture },
+                favoriteThing: { S: body.favoriteThing },
+            },
+        };
+
+        // Save the profile to the DynamoDB table
+        const command = new PutItemCommand(params);
+        const response = await dynamoDBClient.send(command);
+
+        // Return a success response
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: "Profile saved successfully!",
+                response,
+            }),
+        };
+    } catch (error) {
+        console.error("Error saving profile:", error);
+
+        // Return an error response
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: "Failed to save profile",
+                error: error.message,
+            }),
+        };
+    }
+};
