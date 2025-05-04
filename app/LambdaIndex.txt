@@ -1,11 +1,33 @@
-//This is what is saved in the lambda function code section. https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/functions/ProfileHandler?subtab=general&tab=code
-
-
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
 const dynamoDBClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 export const handler = async (event) => {
+    // Define the allowed origins
+    const allowedOrigins = [
+        "https://master.d23009d3fju64i.amplifyapp.com",
+        "https://tswilliams87.github.io", // Replace with your second domain
+    ];
+
+    // Get the Origin header from the incoming request
+    const origin = event.headers.origin;
+
+    // Determine if the Origin is allowed
+    const allowOrigin = allowedOrigins.includes(origin) ? origin : null;
+
+    // Handle preflight (OPTIONS) requests for CORS
+    if (event.httpMethod === "OPTIONS") {
+        return {
+            statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": allowOrigin || "null", // Allow only if the origin is valid
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS, POST", // Add other methods as needed
+            },
+            body: null, // OPTIONS requests don't require a body
+        };
+    }
+
     try {
         // Extract the DynamoDB table name from the environment variables
         const tableName = process.env.TABLE_NAME;
@@ -28,9 +50,12 @@ export const handler = async (event) => {
         const command = new PutItemCommand(params);
         const response = await dynamoDBClient.send(command);
 
-        // Return a success response
+        // Return a success response with CORS headers
         return {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": allowOrigin || "null", // Allow only if the origin is valid
+            },
             body: JSON.stringify({
                 message: "Profile saved successfully!",
                 response,
@@ -39,9 +64,12 @@ export const handler = async (event) => {
     } catch (error) {
         console.error("Error saving profile:", error);
 
-        // Return an error response
+        // Return an error response with CORS headers
         return {
             statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": allowOrigin || "null", // Allow only if the origin is valid
+            },
             body: JSON.stringify({
                 message: "Failed to save profile",
                 error: error.message,
