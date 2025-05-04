@@ -5,70 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Profile</title>
   <link rel="stylesheet" href="app/styles.css">
-  <style>
-   .navbar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #f8f9fa;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-    }
-
-    .navbar a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #007bff;
-      font-weight: bold;
-      -webkit-transition: color 0.3s ease;
-      transition: color 0.3s ease;
-    }
-
-    .navbar a:hover {
-      text-decoration: underline;
-    }
-
-    .create-profile-container {
-      margin: 50px auto;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-
-    input {
-      display: block;
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      font-size: 16px;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      -webkit-transition: background-color 0.3s ease;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
 </head>
 <body>
   <div class="navbar">
@@ -88,44 +24,31 @@
     </form>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('create-profile-form');
+  <script type="module">
+    import { addProfile, updateProfile } from './api.js';
 
-      const editProfile = JSON.parse(localStorage.getItem('editProfile'));
-      if (editProfile) {
-        form.name.value = editProfile.name;
-        form.favoriteThing.value = editProfile.favoriteThing;
+    const form = document.getElementById('create-profile-form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const name = form.name.value;
+      const favoriteThing = form.favoriteThing.value;
+      const picture = form.picture.files.length > 0
+        ? URL.createObjectURL(form.picture.files[0])
+        : "";
+
+      if (!picture) {
+        alert("Please upload a profile picture.");
+        return;
       }
 
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const name = form.name.value;
-        const favoriteThing = form.favoriteThing.value;
-        const picture = form.picture.files.length > 0
-          ? URL.createObjectURL(form.picture.files[0])
-          : editProfile ? editProfile.picture : "";
-
-        if (!picture) {
-          alert("Please upload a profile picture.");
-          return;
-        }
-
-        const profile = { name, picture, favoriteThing };
-
-        let profiles = JSON.parse(localStorage.getItem('profiles')) || [];
-        if (editProfile) {
-          const index = profiles.findIndex(p => p.name === editProfile.name && p.picture === editProfile.picture);
-          if (index !== -1) profiles[index] = profile;
-        } else {
-          profiles.push(profile);
-        }
-
-        localStorage.setItem('profiles', JSON.stringify(profiles));
-        localStorage.removeItem('editProfile');
+      const profile = { name, picture, favoriteThing };
+      try {
+        await addProfile(profile);
         window.location.href = 'carousel.html';
-      });
+      } catch (error) {
+        console.error('Failed to save profile:', error);
+      }
     });
   </script>
 </body>
