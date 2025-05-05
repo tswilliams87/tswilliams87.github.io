@@ -1,4 +1,3 @@
-//working versions as of may 4 3:38 tested all the way through API.  
 import { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 
 const dynamoDBClient = new DynamoDBClient({ region: process.env.AWS_REGION });
@@ -36,6 +35,27 @@ export const handler = async (event) => {
                 },
                 body: JSON.stringify({
                     message: "Latest profile retrieved successfully!",
+                    data: response.Items,
+                }),
+            };
+        } else if (httpMethod === "GET" && resourcePath === "/profiles") {
+            // Handle GET request to retrieve all profiles
+            const params = {
+                TableName: tableName,
+            };
+            const command = new ScanCommand(params);
+            const response = await dynamoDBClient.send(command);
+
+            return {
+                statusCode: 200,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Profiles retrieved successfully!",
                     data: response.Items,
                 }),
             };

@@ -60,3 +60,17 @@ export async function getAllProfiles() {
         throw error;
     }
 }
+
+export async function fetchProfiles() {
+    try {
+        const response = await fetch('/profiles'); // Ensure this endpoint is correct
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const profiles = await response.json();
+        return profiles;
+    } catch (error) {
+        console.error('Error fetching profiles:', error);
+        throw error;
+    }
+}

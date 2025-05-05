@@ -1,47 +1,156 @@
-//This is a backup of the last working before all the other stuff was added
-import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+//working versions as of may 4 7pmtested all the way through webpage
+import { DynamoDBClient, PutItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
 
 const dynamoDBClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 export const handler = async (event) => {
+    console.log("HTTP Method:", event.httpMethod);
+    console.log("Resource Path:", event.resource);
+    console.log("Event:", JSON.stringify(event));
+
     try {
-        // Extract the DynamoDB table name from the environment variables
+        // Extract the DynamoDB table name from environment variables
         const tableName = process.env.TABLE_NAME;
 
-        // Parse the request body
-        const body = JSON.parse(event.body);
+        // Determine the HTTP method and resource path
+        const httpMethod = event.httpMethod || "POST"; // Default to POST
+        const resourcePath = event.resource || "/profiles"; // Default to /profiles
 
-        // Prepare the parameters for the PutItemCommand
-        const params = {
-            TableName: tableName,
-            Item: {
-                id: { S: body.id },
-                name: { S: body.name },
-                picture: { S: body.picture },
-                favoriteThing: { S: body.favoriteThing },
-            },
-        };
+        if (httpMethod === "GET" && resourcePath === "/profiles/latest-id") {
+            // Handle GET request for latest-id
+            const params = {
+                TableName: tableName,
+                Limit: 1,
+                ScanIndexForward: false, // Get the latest item
+            };
+            const command = new ScanCommand(params);
+            const response = await dynamoDBClient.send(command);
 
-        // Save the profile to the DynamoDB table
-        const command = new PutItemCommand(params);
-        const response = await dynamoDBClient.send(command);
+            return {
+                statusCode: 200,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Latest profile retrieved successfully!",
+                    data: response.Items,
+                }),
+            };
+        } else if (httpMethod === "POST" && resourcePath === "/profiles") {
+            // Handle POST request to create a new profile
+            if (!event.body) {
+                return {
+                    statusCode: 400,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                        "Access-Control-Allow-Headers": "Content-Type",
+                    },
+                    body: JSON.stringify({
+                        message: "Request body is missing",
+                    }),
+                };
+            }
 
-        // Return a success response
-        return {
-            statusCode: 200,
-            body: JSON.stringify({
-                message: "Profile saved successfully!",
-                response,
-            }),
-        };
+            const body = JSON.parse(event.body);
+            const params = {
+                TableName: tableName,
+                Item: {
+                    id: { S: body.id },
+                    name: { S: body.name },
+                    picture: { S: body.picture },
+                    favoriteThing: { S: body.favoriteThing },
+                },
+            };
+            const command = new PutItemCommand(params);
+            await dynamoDBClient.send(command);
+
+            return {
+                statusCode: 201,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Profile created successfully!",
+                }),
+            };
+        } else if (httpMethod === "PUT" && resourcePath === "/profiles/latest-id") {
+            // Handle PUT request to update a profile
+            if (!event.body) {
+                return {
+                    statusCode: 400,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                        "Access-Control-Allow-Headers": "Content-Type",
+                    },
+                    body: JSON.stringify({
+                        message: "Request body is missing",
+                    }),
+                };
+            }
+
+            const body = JSON.parse(event.body);
+            const params = {
+                TableName: tableName,
+                Item: {
+                    id: { S: body.id },
+                    name: { S: body.name },
+                    picture: { S: body.picture },
+                    favoriteThing: { S: body.favoriteThing },
+                },
+            };
+            const command = new PutItemCommand(params);
+            await dynamoDBClient.send(command);
+
+            return {
+                statusCode: 200,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Profile updated successfully!",
+                }),
+            };
+        } else {
+            // Handle unknown routes
+            return {
+                statusCode: 404,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Resource not found",
+                }),
+            };
+        }
     } catch (error) {
-        console.error("Error saving profile:", error);
+        console.error("Error handling request:", error);
 
-        // Return an error response
         return {
             statusCode: 500,
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                "Access-Control-Allow-Headers": "Content-Type",
+            },
             body: JSON.stringify({
-                message: "Failed to save profile",
+                message: "Internal Server Error",
                 error: error.message,
             }),
         };
