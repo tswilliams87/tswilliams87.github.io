@@ -73,6 +73,31 @@
       border: none;
       border-radius: 5px;
     }
+
+    .swipe-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .swipe-button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .swipe-button.nope {
+      background-color: red;
+      color: white;
+    }
+
+    .swipe-button.yes {
+      background-color: green;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -88,6 +113,10 @@
     <div id="carousel" class="carousel">
       <!-- Cards will be dynamically added here -->
     </div>
+    <div class="swipe-buttons">
+      <button id="nope-btn" class="swipe-button nope">Nope</button>
+      <button id="yes-btn" class="swipe-button yes">Yes, please</button>
+    </div>
     <button id="reload-btn" class="reload-button" style="display: none;">Reload Profiles</button>
   </div>
 
@@ -99,6 +128,8 @@
     const carousel = document.getElementById('carousel');
     const reloadBtn = document.getElementById('reload-btn');
     const actionPopup = document.getElementById('action-popup');
+    const nopeBtn = document.getElementById('nope-btn');
+    const yesBtn = document.getElementById('yes-btn');
 
     let profiles = [];
     let currentIndex = 0;
@@ -141,10 +172,6 @@
         const currentProfile = profiles[currentIndex];
         const card = createCard(currentProfile);
         carousel.appendChild(card);
-
-        // Add swipe event listeners
-        card.addEventListener('swipeleft', () => swipe('nope'));
-        card.addEventListener('swiperight', () => swipe('yes'));
       } else {
         carousel.innerHTML = '<p>No more profiles</p>';
         reloadBtn.style.display = 'block';
@@ -167,15 +194,9 @@
       updateCarousel();
     }
 
-    // Simulate swipe events for left and right clicks
-    carousel.addEventListener('click', (event) => {
-      const rect = carousel.getBoundingClientRect();
-      if (event.clientX < rect.left + rect.width / 2) {
-        swipe('nope'); // Simulate swipe left
-      } else {
-        swipe('yes'); // Simulate swipe right
-      }
-    });
+    // Add event listeners for buttons
+    nopeBtn.addEventListener('click', () => swipe('nope'));
+    yesBtn.addEventListener('click', () => swipe('yes'));
 
     // Reload profiles button
     reloadBtn.addEventListener('click', loadProfiles);
