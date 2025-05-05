@@ -149,26 +149,26 @@
     }
 
     function createCard(profile) {
-      if (!profile || !profile.picture || !profile.name || !profile.favoriteThing) {
-        console.error('Invalid Profile:', profile);
-        return null;
-      }
+      // Extract values from the nested objects
+      const name = profile.name?.S || 'Unknown';
+      const picture = profile.picture?.S || 'https://via.placeholder.com/300x400';
+      const favoriteThing = profile.favoriteThing?.S || 'Not specified';
 
       const card = document.createElement('div');
       card.className = 'card';
 
       const img = document.createElement('img');
-      img.src = profile.picture;
-      img.alt = profile.name;
+      img.src = picture;
+      img.alt = name;
 
-      const name = document.createElement('h2');
-      name.textContent = profile.name;
+      const nameElement = document.createElement('h2');
+      nameElement.textContent = name;
 
       const favorite = document.createElement('p');
-      favorite.textContent = `Favorite: ${profile.favoriteThing}`;
+      favorite.textContent = `Favorite: ${favoriteThing}`;
 
       card.appendChild(img);
-      card.appendChild(name);
+      card.appendChild(nameElement);
       card.appendChild(favorite);
 
       return card;
