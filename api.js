@@ -63,7 +63,7 @@ export async function getAllProfiles() {
 
 export async function fetchProfiles() {
     try {
-        const response = await fetch('/profiles'); // Ensure this endpoint is correct
+        const response = await fetch(API_BASE_URL); // Ensure this endpoint is correct
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
