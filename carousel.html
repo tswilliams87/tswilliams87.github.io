@@ -136,8 +136,10 @@
 
     async function loadProfiles() {
       try {
-        profiles = await fetchProfiles();
-        console.log('Profiles:', profiles); // Add this line
+        const response = await fetchProfiles();
+        console.log('Profiles Response:', response); // Debugging API response
+        profiles = response.data; // Extract the `data` array
+        console.log('Extracted Profiles:', profiles); // Log the extracted profiles
         currentIndex = 0;
         updateCarousel();
         reloadBtn.style.display = 'none';
@@ -147,6 +149,11 @@
     }
 
     function createCard(profile) {
+      if (!profile || !profile.picture || !profile.name || !profile.favoriteThing) {
+        console.error('Invalid Profile:', profile);
+        return null;
+      }
+
       const card = document.createElement('div');
       card.className = 'card';
 
@@ -171,9 +178,9 @@
       carousel.innerHTML = '';
       if (currentIndex < profiles.length) {
         const currentProfile = profiles[currentIndex];
-        console.log('Current Profile:', currentProfile); 
+        console.log('Current Profile:', currentProfile); // Debug profile being displayed
         const card = createCard(currentProfile);
-        carousel.appendChild(card);
+        if (card) carousel.appendChild(card);
       } else {
         carousel.innerHTML = '<p>No more profiles</p>';
         reloadBtn.style.display = 'block';
