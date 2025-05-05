@@ -5,6 +5,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carousel</title>
   <link rel="stylesheet" href="app/styles.css">
+  <style>
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 300px;
+      height: 400px;
+      margin: 0 auto;
+      background-color: #fff;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      max-height: 60%;
+      object-fit: cover;
+    }
+
+    .card h2 {
+      margin: 10px 0;
+      font-size: 1.5rem;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .carousel-container {
+      text-align: center;
+    }
+
+    .action-popup {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .action-popup.nope {
+      background-color: red;
+    }
+
+    .action-popup.yes {
+      background-color: green;
+    }
+
+    .reload-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
   <div class="navbar">
@@ -19,19 +88,27 @@
     <div id="carousel" class="carousel">
       <!-- Cards will be dynamically added here -->
     </div>
+    <button id="reload-btn" class="reload-button" style="display: none;">Reload Profiles</button>
   </div>
+
+  <div id="action-popup" class="action-popup"></div>
 
   <script type="module">
     import { fetchProfiles } from './api.js';
 
     const carousel = document.getElementById('carousel');
+    const reloadBtn = document.getElementById('reload-btn');
+    const actionPopup = document.getElementById('action-popup');
+
     let profiles = [];
     let currentIndex = 0;
 
     async function loadProfiles() {
       try {
         profiles = await fetchProfiles();
+        currentIndex = 0;
         updateCarousel();
+        reloadBtn.style.display = 'none';
       } catch (error) {
         console.error('Failed to fetch profiles:', error);
       }
@@ -64,15 +141,44 @@
         const currentProfile = profiles[currentIndex];
         const card = createCard(currentProfile);
         carousel.appendChild(card);
+
+        // Add swipe event listeners
+        card.addEventListener('swipeleft', () => swipe('nope'));
+        card.addEventListener('swiperight', () => swipe('yes'));
       } else {
         carousel.innerHTML = '<p>No more profiles</p>';
+        reloadBtn.style.display = 'block';
       }
     }
 
-    carousel.addEventListener('click', () => {
+    function showPopup(action) {
+      actionPopup.textContent = action === 'yes' ? 'Yes, please' : 'Nope';
+      actionPopup.className = `action-popup ${action}`;
+      actionPopup.style.display = 'block';
+
+      setTimeout(() => {
+        actionPopup.style.display = 'none';
+      }, 1000);
+    }
+
+    function swipe(action) {
+      showPopup(action);
       currentIndex++;
       updateCarousel();
+    }
+
+    // Simulate swipe events for left and right clicks
+    carousel.addEventListener('click', (event) => {
+      const rect = carousel.getBoundingClientRect();
+      if (event.clientX < rect.left + rect.width / 2) {
+        swipe('nope'); // Simulate swipe left
+      } else {
+        swipe('yes'); // Simulate swipe right
+      }
     });
+
+    // Reload profiles button
+    reloadBtn.addEventListener('click', loadProfiles);
 
     loadProfiles();
   </script>
