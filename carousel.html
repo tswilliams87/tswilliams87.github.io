@@ -137,6 +137,7 @@
     async function loadProfiles() {
       try {
         profiles = await fetchProfiles();
+        console.log('Profiles:', profiles); // Add this line
         currentIndex = 0;
         updateCarousel();
         reloadBtn.style.display = 'none';
@@ -170,6 +171,7 @@
       carousel.innerHTML = '';
       if (currentIndex < profiles.length) {
         const currentProfile = profiles[currentIndex];
+        console.log('Current Profile:', currentProfile); 
         const card = createCard(currentProfile);
         carousel.appendChild(card);
       } else {
