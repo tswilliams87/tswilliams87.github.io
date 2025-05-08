@@ -14,7 +14,8 @@ export async function getLastProfileId() {
         const data = await response.json();
         console.log(data.lastId + ' ' + typeof(data.lastId));
         if (data.lastId === null || data.lastId === undefined) {
-            throw new Error('NAN returned');
+            throw new Error('null or undefined returned from JSON response from /lates-id call data in response: ' + json.stringify(data));
+            
         }
         return data.lastId; // Convert the latest ID to an integer
     } catch (error) {
