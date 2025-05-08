@@ -12,7 +12,7 @@ export async function getLastProfileId() {
         }
 
         const data = await response.json();
-        return parseInt(data.lastId, 10); // Convert the latest ID to an integer
+        return data.lastId; // Convert the latest ID to an integer
     } catch (error) {
         console.error('Error fetching the latest profile ID:', error);
         throw error;
