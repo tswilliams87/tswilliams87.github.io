@@ -13,11 +13,11 @@ export async function getLastProfileId() {
 
         const data = await response.json();
         console.log(data[0].id.S );
-        if (data[0].id.S === null || data[0].id.S === undefined) {
+        if (data.id.S === null || data.id.S === undefined) {
             throw new Error('null or undefined returned from JSON response from /latest-id call data in response: ' );
             
         }
-        return data[0].id.S; //id is a string in dynamo db
+        return data.id.S; //id is a string in dynamo db
     } catch (error) {
         console.error('Error fetching the latest profile ID:', error);
         throw error;
