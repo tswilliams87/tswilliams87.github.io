@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Profile</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Create a New Profile</h1>
@@ -49,15 +49,15 @@
                 statusMessage.textContent = "Creating profile... Please wait.";
 
                 const lastProfileId = await getLastProfileId();
-                const newProfileId = lastProfileId + 1;
+                const newProfileId = parseInt(lastProfileId, 10) + 1;
 
                 const profile = {
-    id: newProfileId.toString(),
-    name,
-    imageBase64,     // <-- renamed from picture
-    filename,
-    favoriteThing,
-};
+                    id: newProfileId.toString(),
+                    name,
+                    picture: imageBase64,
+                    filename,
+                    favoriteThing,
+                };
 
                 await addProfile(profile);
 
