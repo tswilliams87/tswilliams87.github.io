@@ -2,7 +2,7 @@
   const VERSION = '{%VERSION%}';
   const files = [
     'images/bigbanan.jpg',
-    'images/banana.png',
+    'images/banana.png', 
     'images/banana.svg',
     'images/testpic1.jpg',
     'images/testpic2.jpg',
