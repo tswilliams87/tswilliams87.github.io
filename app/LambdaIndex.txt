@@ -1,13 +1,10 @@
-
+// Lambda handler with S3 upload support using Node.js 18 and aws-sdk v3
 import { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const REGION = process.env.AWS_REGION;
-const BUCKET = "milkshake-user-images";
-
-const dynamoDBClient = new DynamoDBClient({ region: REGION });
-const s3Client = new S3Client({ region: REGION });
+const dynamoDBClient = new DynamoDBClient({ region: process.env.AWS_REGION });
+const s3Client = new S3Client({ region: process.env.AWS_REGION });
+const BUCKET_NAME = "milkshake-user-images";
 
 export const handler = async (event) => {
     console.log("HTTP Method:", event.httpMethod);
@@ -20,40 +17,64 @@ export const handler = async (event) => {
         const resourcePath = event.resource || "/profiles";
 
         if (httpMethod === "GET" && resourcePath === "/profiles/latest-id") {
-            const params = { TableName: tableName };
+            const params = {
+                TableName: tableName,
+                Limit: 1,
+                ScanIndexForward: false,
+            };
             const command = new ScanCommand(params);
             const response = await dynamoDBClient.send(command);
-            response.Items.sort((a, b) => parseInt(b.id.S) - parseInt(a.id.S));
-            const latest = response.Items[0];
 
             return {
                 statusCode: 200,
-                headers: defaultHeaders(),
-                body: JSON.stringify({ data: [latest] })
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Latest profile retrieved successfully!",
+                    data: response.Items,
+                }),
             };
-        }
+        } else if (httpMethod === "GET" && resourcePath === "/profiles") {
+            const params = {
+                TableName: tableName,
+            };
+            const command = new ScanCommand(params);
+            const response = await dynamoDBClient.send(command);
 
-        if (httpMethod === "POST" && resourcePath === "/profiles") {
+            return {
+                statusCode: 200,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Profiles retrieved successfully!",
+                    data: response.Items,
+                }),
+            };
+        } else if (httpMethod === "POST" && resourcePath === "/profiles") {
             const body = JSON.parse(event.body);
             const { id, name, favoriteThing, imageBase64, filename } = body;
 
-            const buffer = Buffer.from(imageBase64, 'base64');
-            const key = `profiles/${filename}`;
-
-            const uploadCommand = new PutObjectCommand({
-                Bucket: BUCKET,
-                Key: key,
-                Body: buffer,
-                ContentEncoding: "base64",
-                ContentType: "image/jpeg"
-            });
-            await s3Client.send(uploadCommand);
-
-            const signedUrl = await getSignedUrl(
-                s3Client,
-                new GetObjectCommand({ Bucket: BUCKET, Key: key }),
-                { expiresIn: 3600 }
-            );
+            let imageUrl = body.picture;
+            if (imageBase64 && filename) {
+                const buffer = Buffer.from(imageBase64, 'base64');
+                const s3Params = {
+                    Bucket: BUCKET_NAME,
+                    Key: `profiles/${filename}`,
+                    Body: buffer,
+                    ContentEncoding: 'base64',
+                    ContentType: 'image/jpeg',
+                };
+                await s3Client.send(new PutObjectCommand(s3Params));
+                imageUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/profiles/${filename}`;
+            }
 
             const params = {
                 TableName: tableName,
@@ -61,40 +82,79 @@ export const handler = async (event) => {
                     id: { S: id },
                     name: { S: name },
                     favoriteThing: { S: favoriteThing },
-                    picture: { S: signedUrl }
-                }
+                    picture: { S: imageUrl },
+                },
             };
-
-            const putCommand = new PutItemCommand(params);
-            await dynamoDBClient.send(putCommand);
+            const command = new PutItemCommand(params);
+            await dynamoDBClient.send(command);
 
             return {
                 statusCode: 201,
-                headers: defaultHeaders(),
-                body: JSON.stringify({ message: "Profile created successfully!" })
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Profile created successfully!",
+                }),
+            };
+        } else if (httpMethod === "PUT" && resourcePath === "/profiles/latest-id") {
+            const body = JSON.parse(event.body);
+            const params = {
+                TableName: tableName,
+                Item: {
+                    id: { S: body.id },
+                    name: { S: body.name },
+                    picture: { S: body.picture },
+                    favoriteThing: { S: body.favoriteThing },
+                },
+            };
+            const command = new PutItemCommand(params);
+            await dynamoDBClient.send(command);
+
+            return {
+                statusCode: 200,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Profile updated successfully!",
+                }),
+            };
+        } else {
+            return {
+                statusCode: 404,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                    "Access-Control-Allow-Headers": "Content-Type",
+                },
+                body: JSON.stringify({
+                    message: "Resource not found",
+                }),
             };
         }
+    } catch (error) {
+        console.error("Error handling request:", error);
 
         return {
-            statusCode: 404,
-            headers: defaultHeaders(),
-            body: JSON.stringify({ message: "Route not found" })
-        };
-    } catch (error) {
-        console.error("Lambda error:", error);
-        return {
             statusCode: 500,
-            headers: defaultHeaders(),
-            body: JSON.stringify({ message: "Internal server error", error: error.message })
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                "Access-Control-Allow-Headers": "Content-Type",
+            },
+            body: JSON.stringify({
+                message: "Internal Server Error",
+                error: error.message,
+            }),
         };
     }
 };
-
-function defaultHeaders() {
-    return {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
-        "Access-Control-Allow-Headers": "Content-Type"
-    };
-}
