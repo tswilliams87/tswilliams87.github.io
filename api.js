@@ -13,7 +13,7 @@ export async function getLastProfileId() {
 
         const data = await response.json();
         console.log(data.id + ' ' + typeof(data.id));
-        if (data.idd === null || data.id === undefined) {
+        if (data.id === null || data.id === undefined) {
             throw new Error('null or undefined returned from JSON response from /lates-id call data in response: ' + data);
             
         }
