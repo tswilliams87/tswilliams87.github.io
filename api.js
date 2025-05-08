@@ -12,12 +12,14 @@ export async function getLastProfileId() {
         }
 
         const data = await response.json();
-        console.log(data[0].id.S );
-        if (data.id.S === null || data.id.S === undefined) {
-            throw new Error('null or undefined returned from JSON response from /latest-id call data in response: ' );
-            
+        const latestItem = data.data[0];
+        const lastId = latestItem?.id?.S;
+
+        if (!lastId) {
+            throw new Error("No ID found in the latest profile.");
         }
-        return data.id.S; //id is a string in dynamo db
+
+        return lastId; // Return as string
     } catch (error) {
         console.error('Error fetching the latest profile ID:', error);
         throw error;
