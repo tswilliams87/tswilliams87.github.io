@@ -1,6 +1,10 @@
+// Lambda handler with S3 upload support using Node.js 18 and aws-sdk v3
 import { DynamoDBClient, PutItemCommand, GetItemCommand, ScanCommand } from "@aws-sdk/client-dynamodb";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const dynamoDBClient = new DynamoDBClient({ region: process.env.AWS_REGION });
+const s3Client = new S3Client({ region: process.env.AWS_REGION });
+const BUCKET_NAME = "milkshake-user-images";
 
 export const handler = async (event) => {
     console.log("HTTP Method:", event.httpMethod);
@@ -8,19 +12,15 @@ export const handler = async (event) => {
     console.log("Event:", JSON.stringify(event));
 
     try {
-        // Extract the DynamoDB table name from environment variables
         const tableName = process.env.TABLE_NAME;
-
-        // Determine the HTTP method and resource path
-        const httpMethod = event.httpMethod || "POST"; // Default to POST
-        const resourcePath = event.resource || "/profiles"; // Default to /profiles
+        const httpMethod = event.httpMethod || "POST";
+        const resourcePath = event.resource || "/profiles";
 
         if (httpMethod === "GET" && resourcePath === "/profiles/latest-id") {
-            // Handle GET request for latest-id
             const params = {
                 TableName: tableName,
                 Limit: 1,
-                ScanIndexForward: false, // Get the latest item
+                ScanIndexForward: false,
             };
             const command = new ScanCommand(params);
             const response = await dynamoDBClient.send(command);
@@ -39,7 +39,6 @@ export const handler = async (event) => {
                 }),
             };
         } else if (httpMethod === "GET" && resourcePath === "/profiles") {
-            // Handle GET request to retrieve all profiles
             const params = {
                 TableName: tableName,
             };
@@ -60,15 +59,30 @@ export const handler = async (event) => {
                 }),
             };
         } else if (httpMethod === "POST" && resourcePath === "/profiles") {
-            // Handle POST request to create a new profile
             const body = JSON.parse(event.body);
+            const { id, name, favoriteThing, imageBase64, filename } = body;
+
+            let imageUrl = body.picture;
+            if (imageBase64 && filename) {
+                const buffer = Buffer.from(imageBase64, 'base64');
+                const s3Params = {
+                    Bucket: BUCKET_NAME,
+                    Key: `profiles/${filename}`,
+                    Body: buffer,
+                    ContentEncoding: 'base64',
+                    ContentType: 'image/jpeg',
+                };
+                await s3Client.send(new PutObjectCommand(s3Params));
+                imageUrl = `https://${BUCKET_NAME}.s3.amazonaws.com/profiles/${filename}`;
+            }
+
             const params = {
                 TableName: tableName,
                 Item: {
-                    id: { S: body.id },
-                    name: { S: body.name },
-                    picture: { S: body.picture },
-                    favoriteThing: { S: body.favoriteThing },
+                    id: { S: id },
+                    name: { S: name },
+                    favoriteThing: { S: favoriteThing },
+                    picture: { S: imageUrl },
                 },
             };
             const command = new PutItemCommand(params);
@@ -87,7 +101,6 @@ export const handler = async (event) => {
                 }),
             };
         } else if (httpMethod === "PUT" && resourcePath === "/profiles/latest-id") {
-            // Handle PUT request to update a profile
             const body = JSON.parse(event.body);
             const params = {
                 TableName: tableName,
@@ -114,7 +127,6 @@ export const handler = async (event) => {
                 }),
             };
         } else {
-            // Handle unknown routes
             return {
                 statusCode: 404,
                 headers: {
