@@ -12,6 +12,10 @@ export async function getLastProfileId() {
         }
 
         const data = await response.json();
+        console.log(data.lastId + ' ' + typeof(data.lastId));
+        if (data.lastId === null || data.lastId === undefined) {
+            throw new Error('NAN returned');
+        }
         return data.lastId; // Convert the latest ID to an integer
     } catch (error) {
         console.error('Error fetching the latest profile ID:', error);
