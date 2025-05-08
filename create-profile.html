@@ -52,12 +52,12 @@
                 const newProfileId = lastProfileId + 1;
 
                 const profile = {
-                    id: newProfileId.toString(),
-                    name,
-                    picture: imageBase64,
-                    filename,
-                    favoriteThing,
-                };
+    id: newProfileId.toString(),
+    name,
+    imageBase64,     // <-- renamed from picture
+    filename,
+    favoriteThing,
+};
 
                 await addProfile(profile);
 
