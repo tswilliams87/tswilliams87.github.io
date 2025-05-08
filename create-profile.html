@@ -21,11 +21,11 @@
         <button type="submit">Submit</button>
     </form>
 
-    <!-- Placeholder for displaying a loading spinner or success message -->
     <div id="status-message"></div>
 
     <script type="module">
         import { addProfile, getLastProfileId } from './api.js';
+        import { toBase64 } from './main.js';
 
         const form = document.getElementById('create-profile-form');
         const statusMessage = document.getElementById('status-message');
@@ -36,33 +36,32 @@
             const name = form.name.value;
             const favoriteThing = form.favoriteThing.value;
 
-            // Ensure a picture is uploaded
             if (form.picture.files.length === 0) {
                 alert("Please upload a profile picture.");
                 return;
             }
 
-            const picture = URL.createObjectURL(form.picture.files[0]);
+            const file = form.picture.files[0];
+            const imageBase64 = await toBase64(file);
+            const filename = `${Date.now()}_${file.name}`;
 
             try {
-                // Display loading message
                 statusMessage.textContent = "Creating profile... Please wait.";
 
-                // Get the latest profile ID from the backend and increment it
                 const lastProfileId = await getLastProfileId();
                 const newProfileId = lastProfileId + 1;
 
                 const profile = {
-                    id: newProfileId.toString(), // Convert to string for DynamoDB compatibility
+                    id: newProfileId.toString(),
                     name,
-                    picture,
+                    picture: imageBase64,
+                    filename,
                     favoriteThing,
                 };
 
-                const response = await addProfile(profile);
+                await addProfile(profile);
 
-                // Display success message and redirect
-                statusMessage.textContent = "Profile created successfully!";
+                statusMessage.textContent = "Profile created successfully! Redirecting...";
                 setTimeout(() => {
                     window.location.href = 'carousel.html';
                 }, 2000);
