@@ -12,12 +12,12 @@ export async function getLastProfileId() {
         }
 
         const data = await response.json();
-        console.log(data.id + ' ' + typeof(data.id));
-        if (data.id === null || data.id === undefined) {
-            throw new Error('null or undefined returned from JSON response from /latest-id call data in response: ' + parse.JSON(data));
+        console.log(data[0].id.s );
+        if (data[0].id.s === null || data[0].id.s === undefined) {
+            throw new Error('null or undefined returned from JSON response from /latest-id call data in response: ' );
             
         }
-        return data.id; // Convert the latest ID to an integer
+        return data[0].id.s; // Convert the latest ID to an integer
     } catch (error) {
         console.error('Error fetching the latest profile ID:', error);
         throw error;
