@@ -1,4 +1,4 @@
-import { fetchProfiles, addProfile, updateProfile, deleteProfile } from './api.js';
+import { fetchProfiles, addProfile, updateProfile} from './api.js';
 
 // Convert File to Base64
 export function toBase64(file) {
