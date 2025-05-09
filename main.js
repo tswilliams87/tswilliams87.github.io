@@ -46,7 +46,7 @@ export async function createProfileWithImage(form) {
     return await response.json();
 }
 
-// Optional: Load and render profiles if list is present
+// Load profiles if list present
 window.onload = async () => {
     try {
         const profiles = await fetchProfiles();
@@ -65,7 +65,7 @@ window.onload = async () => {
     }
 };
 
-// main.js for amplify (clean and fixed)
+// Amplify Storage only
 import { Amplify } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
 import {
   uploadData,
@@ -73,10 +73,6 @@ import {
 } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
 
 Amplify.configure({
-  Auth: {
-    region: 'us-east-1',
-    identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
-  },
   Storage: {
     region: 'us-east-1',
     bucket: 'milkshake-user-images',
