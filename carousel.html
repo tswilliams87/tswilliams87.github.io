@@ -124,6 +124,7 @@
 
   <script type="module">
     import { fetchProfiles } from './api.js';
+    import { getUrl } from './main.js';
 
     const carousel = document.getElementById('carousel');
     const reloadBtn = document.getElementById('reload-btn');
@@ -151,14 +152,23 @@
     function createCard(profile) {
       // Extract values from the nested objects
       const name = profile.name?.S || 'Unknown';
-      const picture = profile.picture?.S || 'https://via.placeholder.com/300x400';
+      const s3Key = profile.picture?.S;
       const favoriteThing = profile.favoriteThing?.S || 'Not specified';
 
       const card = document.createElement('div');
       card.className = 'card';
 
       const img = document.createElement('img');
-      img.src = picture;
+      if (s3Key) {
+  try {
+    const result = await getUrl({ key: s3Key, options: { accessLevel: 'protected' } });
+    img.src = result.url;
+  } catch {
+    img.src = 'https://via.placeholder.com/300x400';
+  }
+} else {
+  img.src = 'https://via.placeholder.com/300x400';
+}
       img.alt = name;
 
       const nameElement = document.createElement('h2');
