@@ -65,7 +65,7 @@ window.onload = async () => {
     }
 };
 
-// main.js for amplify (fixed)
+// main.js for amplify (clean and fixed)
 import { Amplify } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
 import {
   uploadData,
@@ -87,14 +87,5 @@ Amplify.configure({
 
 export {
   uploadData,
-  getUrl,
-};
-
-
-export {
-  signIn,
-  signOut,
-  fetchAuthSession,
-  getCurrentUser,
-  fetchUserAttributes
+  getUrl
 };
