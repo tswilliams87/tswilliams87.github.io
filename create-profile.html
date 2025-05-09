@@ -26,7 +26,13 @@
   <script type="module">
     import { addProfile, getLastProfileId } from './api.js';
     import { uploadData } from './main.js';
-    import { fetchUserAttributes } from './main.js';
+    import { signIn,
+  signOut,
+  fetchAuthSession,
+  getCurrentUser,
+  fetchUserAttributes,
+  uploadData,
+  getUrl } from './main.js';
 
     const form = document.getElementById('create-profile-form');
     const statusMessage = document.getElementById('status-message');
