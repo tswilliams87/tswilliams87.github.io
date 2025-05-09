@@ -64,7 +64,12 @@
   <script type="module">
     import { addProfile, getLastProfileId } from './api.js';
     import {uploadData, getUrl} from './main.js';
+    import { uploadData, getUrl } from './main.js'; // correct import
 
+// ...
+
+const file = form.picture.files[0];
+const filename = `profiles/${Date.now()}_${file.name}`;
 
     const form = document.getElementById('create-profile-form');
     const statusMessage = document.getElementById('status-message');
@@ -83,30 +88,33 @@
       const file = form.picture.files[0];
       const filename = `profiles/${Date.now()}_${file.name}`;
 
-      try {
-        statusMessage.textContent = "Uploading image...";
-        await uploadData({
-          key: filename,
-          data: file,
-          options: {
-            accessLevel: 'protected',
+      
+try {
+    statusMessage.textContent = "Uploading image...";
+    await uploadData({
+        key: filename,
+        data: file,
+        options: {
             contentType: file.type
-          }
-        });
+        }
+    });
 
-        statusMessage.textContent = "Creating profile...";
+    const imageUrl = await getUrl({ key: filename });
 
-        const lastProfileId = await getLastProfileId();
-        const newProfileId = parseInt(lastProfileId, 10) + 1;
+    statusMessage.textContent = "Creating profile...";
 
-        const profile = {
-          id: newProfileId.toString(),
-          name,
-          favoriteThing,
-          filename // Save S3 key
-        };
+    const lastProfileId = await getLastProfileId();
+    const newProfileId = parseInt(lastProfileId, 10) + 1;
 
-        await addProfile(profile);
+    const profile = {
+        id: newProfileId.toString(),
+        name,
+        favoriteThing,
+        filename,
+        imageUrl: imageUrl.url // <-- optional if your API stores URL
+    };
+
+    await addProfile(profile);
 
         statusMessage.textContent = "Profile created successfully! Redirecting...";
         setTimeout(() => {
