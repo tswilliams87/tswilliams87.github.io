@@ -64,3 +64,42 @@ window.onload = async () => {
         console.error('Error loading profiles:', error);
     }
 };
+
+// main.js for amplify
+import { Amplify } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
+import {
+  signIn,
+  signOut,
+  fetchAuthSession,
+  getCurrentUser,
+  getCurrentUserAttributes,
+} from 'https://cdn.jsdelivr.net/npm/@aws-amplify/auth@6.12.4/+esm';
+import {
+  uploadData,
+  getUrl,
+} from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
+
+Amplify.configure({
+  Auth: {
+    region: 'us-east-1',
+    userPoolId: 'us-east-1_OTuVdDtSR',
+    userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc',
+    identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
+  },
+  Storage: {
+    region: 'us-east-1',
+    bucket: 'milkshake-user-images',
+    identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
+    level: 'protected',
+  },
+});
+
+export {
+  signIn,
+  signOut,
+  fetchAuthSession,
+  getCurrentUser,
+  getCurrentUserAttributes,
+  uploadData,
+  getUrl,
+};
