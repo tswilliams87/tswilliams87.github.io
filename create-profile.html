@@ -1,95 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Profile</title>
-  <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Profile</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
+
+    <script>
+        Amplify.configure({
+            Auth: {
+                region: 'us-east-1',
+                userPoolId: 'us-east-1_OTuVdDtSR',
+                userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc'
+            },
+            Storage: {
+                region: 'us-east-1',
+                bucket: 'milkshake-user-images',
+                identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
+                level: 'protected'
+            }
+        });
+    </script>
 </head>
 <body>
-  <h1>Create a New Profile</h1>
-  <form id="create-profile-form">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-    <br>
-    <label for="favoriteThing">Favorite Thing:</label>
-    <input type="text" id="favoriteThing" name="favoriteThing" required>
-    <br>
-    <label for="picture">Profile Picture:</label>
-    <input type="file" id="picture" name="picture" accept="image/*" required>
-    <br>
-    <button type="submit">Submit</button>
-  </form>
+    <h1>Create a New Profile</h1>
+    <form id="create-profile-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="favoriteThing">Favorite Thing:</label>
+        <input type="text" id="favoriteThing" name="favoriteThing" required>
+        <br>
+        <label for="picture">Profile Picture:</label>
+        <input type="file" id="picture" name="picture" accept="image/*" required>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
 
-  <div id="status-message"></div>
+    <div id="status-message"></div>
 
-  <script type="module">
-    import { Amplify } from 'https://cdn.jsdelivr.net/npm/aws-amplify@5.0.4/+esm';
-    import { Storage } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@5.0.4/+esm';
-    import { Auth } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/auth@5.0.4/+esm';
-    import { addProfile, getLastProfileId } from './api.js';
+    <script type="module">
+        import { addProfile, getLastProfileId } from './api.js';
+        import { Storage } from "https://cdn.skypack.dev/aws-amplify";
 
-    Amplify.configure({
-      Auth: {
-        region: 'us-east-1',
-        userPoolId: 'us-east-1_0TuVDtSR',
-        userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc'
-      },
-      Storage: {
-        region: 'us-east-1',
-        bucket: 'milkshake-user-images',
-        identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
-        level: 'protected'
-      }
-    });
+        const form = document.getElementById('create-profile-form');
+        const statusMessage = document.getElementById('status-message');
 
-    const form = document.getElementById('create-profile-form');
-    const statusMessage = document.getElementById('status-message');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
+            const name = form.name.value;
+            const favoriteThing = form.favoriteThing.value;
 
-      const name = form.name.value;
-      const favoriteThing = form.favoriteThing.value;
+            if (form.picture.files.length === 0) {
+                alert("Please upload a profile picture.");
+                return;
+            }
 
-      if (form.picture.files.length === 0) {
-        alert("Please upload a profile picture.");
-        return;
-      }
+            const file = form.picture.files[0];
+            const filename = `profiles/${Date.now()}_${file.name}`;
 
-      const file = form.picture.files[0];
-      const filename = `profiles/${Date.now()}_${file.name}`;
+            try {
+                statusMessage.textContent = "Uploading image...";
+                await Storage.put(filename, file, {
+                    level: 'protected',
+                    contentType: file.type
+                });
 
-      try {
-        statusMessage.textContent = "Uploading image...";
-        await Storage.put(filename, file, {
-          level: 'protected',
-          contentType: file.type
+                statusMessage.textContent = "Creating profile...";
+
+                const lastProfileId = await getLastProfileId();
+                const newProfileId = parseInt(lastProfileId, 10) + 1;
+
+                const profile = {
+                    id: newProfileId.toString(),
+                    name,
+                    filename, // stored S3 key
+                    favoriteThing,
+                };
+
+                await addProfile(profile);
+
+                statusMessage.textContent = "Profile created successfully! Redirecting...";
+                setTimeout(() => {
+                    window.location.href = 'carousel.html';
+                }, 2000);
+            } catch (error) {
+                console.error('Failed to save profile:', error);
+                statusMessage.textContent = "Failed to create profile. Please try again.";
+            }
         });
-
-        statusMessage.textContent = "Creating profile...";
-
-        const lastProfileId = await getLastProfileId();
-        const newProfileId = parseInt(lastProfileId, 10) + 1;
-
-        const profile = {
-          id: newProfileId.toString(),
-          name,
-          favoriteThing,
-          filename
-        };
-
-        await addProfile(profile);
-
-        statusMessage.textContent = "Profile created successfully! Redirecting...";
-        setTimeout(() => {
-          window.location.href = 'carousel.html';
-        }, 2000);
-      } catch (error) {
-        console.error('Failed to save profile:', error);
-        statusMessage.textContent = "Failed to create profile. Please try again.";
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>
