@@ -97,6 +97,5 @@ export {
   fetchAuthSession,
   getCurrentUser,
   fetchUserAttributes,
-  uploadData,
-  getUrl,
+  uploadData
 };
