@@ -149,7 +149,7 @@
       }
     }
 
-    function createCard(profile) {
+   async function createCard(profile) {
       // Extract values from the nested objects
       const name = profile.name?.S || 'Unknown';
       const s3Key = profile.picture?.S;
