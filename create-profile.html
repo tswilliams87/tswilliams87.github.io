@@ -63,64 +63,52 @@
 
   <script type="module">
     import { addProfile, getLastProfileId } from './api.js';
-   
-    import { uploadData, getUrl } from './main.js'; // correct import
-
-// ...
-
-
-const filename = `profiles/${Date.now()}_${file.name}`;
-
-const form = document.getElementById('create-profile-form');
-const statusMessage = document.getElementById('status-message');
-
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const name = form.name.value;
-  const favoriteThing = form.favoriteThing.value;
-  const file = form.picture.files[0];
-
-  // your logic here
-});
-
-
+    import { uploadData, getUrl } from './main.js';
+  
+    const form = document.getElementById('create-profile-form');
+    const statusMessage = document.getElementById('status-message');
+  
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+  
+      const name = form.name.value;
+      const favoriteThing = form.favoriteThing.value;
+  
       if (form.picture.files.length === 0) {
         alert("Please upload a profile picture.");
         return;
       }
-
+  
       const file = form.picture.files[0];
-   
-
-      
-try {
-    statusMessage.textContent = "Uploading image...";
-    await uploadData({
-        key: filename,
-        data: file,
-        options: {
+      const filename = `profiles/${Date.now()}_${file.name}`;
+  
+      try {
+        statusMessage.textContent = "Uploading image...";
+        await uploadData({
+          key: filename,
+          data: file,
+          options: {
             contentType: file.type
-        }
-    });
-
-    const imageUrl = await getUrl({ key: filename });
-
-    statusMessage.textContent = "Creating profile...";
-
-    const lastProfileId = await getLastProfileId();
-    const newProfileId = parseInt(lastProfileId, 10) + 1;
-
-    const profile = {
-        id: newProfileId.toString(),
-        name,
-        favoriteThing,
-        filename,
-        imageUrl: imageUrl.url // <-- optional if your API stores URL
-    };
-
-    await addProfile(profile);
-
+          }
+        });
+  
+        const imageUrl = await getUrl({ key: filename });
+  
+        statusMessage.textContent = "Creating profile...";
+  
+        const lastProfileId = await getLastProfileId();
+        const newProfileId = parseInt(lastProfileId, 10) + 1;
+  
+        const profile = {
+          id: newProfileId.toString(),
+          name,
+          favoriteThing,
+          filename,
+          imageUrl: imageUrl.url
+        };
+  
+        await addProfile(profile);
+  
         statusMessage.textContent = "Profile created successfully! Redirecting...";
         setTimeout(() => {
           window.location.href = 'carousel.html';
@@ -131,5 +119,6 @@ try {
       }
     });
   </script>
+  
 </body>
 </html>
