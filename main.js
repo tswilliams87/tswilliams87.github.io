@@ -96,6 +96,5 @@ export {
   signOut,
   fetchAuthSession,
   getCurrentUser,
-  fetchUserAttributes,
-  uploadData
+  fetchUserAttributes
 };
