@@ -65,15 +65,8 @@ window.onload = async () => {
     }
 };
 
-// main.js for amplify
+// main.js for amplify (fixed)
 import { Amplify } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
-import {
-  signIn,
-  signOut,
-  fetchAuthSession,
-  getCurrentUser,
-  fetchUserAttributes,
-} from 'https://cdn.jsdelivr.net/npm/@aws-amplify/auth@6.12.4/+esm';
 import {
   uploadData,
   getUrl,
@@ -82,8 +75,6 @@ import {
 Amplify.configure({
   Auth: {
     region: 'us-east-1',
-    userPoolId: 'us-east-1_OTuVdDtSR',
-    userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc',
     identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
   },
   Storage: {
@@ -93,6 +84,12 @@ Amplify.configure({
     level: 'protected',
   },
 });
+
+export {
+  uploadData,
+  getUrl,
+};
+
 
 export {
   signIn,
