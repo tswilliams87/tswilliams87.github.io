@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Profile</title>
     <link rel="stylesheet" href="/styles.css">
+    <script src="https://unpkg.com/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
+    <script>
+        Amplify.configure({
+            Auth: {
+                region: 'us-east-1',
+                userPoolId: 'YOUR_USER_POOL_ID',
+                userPoolWebClientId: 'YOUR_WEB_CLIENT_ID'
+            },
+            Storage: {
+                region: 'us-east-1',
+                bucket: 'milkshake-user-images',
+                identityPoolId: 'YOUR_IDENTITY_POOL_ID',
+                level: 'protected'
+            }
+        });
+    </script>
 </head>
 <body>
     <h1>Create a New Profile</h1>
@@ -25,7 +41,7 @@
 
     <script type="module">
         import { addProfile, getLastProfileId } from './api.js';
-        import { toBase64 } from './main.js';
+        import { Storage } from "https://cdn.skypack.dev/aws-amplify";
 
         const form = document.getElementById('create-profile-form');
         const statusMessage = document.getElementById('status-message');
@@ -42,11 +58,16 @@
             }
 
             const file = form.picture.files[0];
-            const imageBase64 = await toBase64(file);
-            const filename = `${Date.now()}_${file.name}`;
+            const filename = `profiles/${Date.now()}_${file.name}`;
 
             try {
-                statusMessage.textContent = "Creating profile... Please wait.";
+                statusMessage.textContent = "Uploading image...";
+                await Storage.put(filename, file, {
+                    level: 'protected',
+                    contentType: file.type
+                });
+
+                statusMessage.textContent = "Creating profile...";
 
                 const lastProfileId = await getLastProfileId();
                 const newProfileId = parseInt(lastProfileId, 10) + 1;
@@ -54,8 +75,7 @@
                 const profile = {
                     id: newProfileId.toString(),
                     name,
-                    imageBase64,
-                    filename,
+                    filename, // stored S3 key
                     favoriteThing,
                 };
 
