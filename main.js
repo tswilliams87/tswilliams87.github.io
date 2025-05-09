@@ -67,7 +67,7 @@ window.onload = async () => {
 
 // main.js – clean and focused on S3 image upload via Amplify
 
-import { Amplify } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
+import { Amplify } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/core@6.3.2/+esm';
 import {
   uploadData,
   getUrl,
