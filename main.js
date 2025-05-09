@@ -72,7 +72,7 @@ import {
   signOut,
   fetchAuthSession,
   getCurrentUser,
-  getCurrentUserAttributes,
+  fetchUserAttributes,
 } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/auth@6.12.4/+esm';
 import {
   uploadData,
@@ -99,7 +99,7 @@ export {
   signOut,
   fetchAuthSession,
   getCurrentUser,
-  getCurrentUserAttributes,
+  fetchUserAttributes,
   uploadData,
   getUrl,
 };
