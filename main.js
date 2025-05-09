@@ -66,12 +66,11 @@ window.onload = async () => {
 };
 
 // Amplify Storage only
-import { Amplify } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
+import { Amplify } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/core@6.3.2/+esm';
 import {
   uploadData,
   getUrl,
 } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
-
 Amplify.configure({
   Storage: {
     region: 'us-east-1',
