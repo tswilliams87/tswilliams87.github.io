@@ -64,6 +64,9 @@
   <script type="module">
     import { uploadData, getUrl } from './main.js';
     import { addProfile, getLastProfileId } from './api.js';
+   
+    console.log('Amplify configured with:', JSON.stringify(Amplify._config));
+
     
   
     const form = document.getElementById('create-profile-form');
@@ -92,6 +95,7 @@
             contentType: file.type
           }
         });
+        
   
         const imageUrl = await getUrl({ key: filename });
   
