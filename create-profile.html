@@ -5,23 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Profile</title>
     <link rel="stylesheet" href="/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
-
-    <script>
+    <script type="module">
+        import { Amplify } from 'https://cdn.jsdelivr.net/npm/aws-amplify@5.0.4/+esm';
+        import { Storage } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@5.0.4/+esm';
+        import { Auth } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/auth@5.0.4/+esm';
+      
         Amplify.configure({
-            Auth: {
-                region: 'us-east-1',
-                userPoolId: 'us-east-1_OTuVdDtSR',
-                userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc'
-            },
-            Storage: {
-                region: 'us-east-1',
-                bucket: 'milkshake-user-images',
-                identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
-                level: 'protected'
-            }
+          Auth: {
+            region: 'us-east-1',
+            userPoolId: 'us-east-1_OTuVdDtSR',
+            userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc'
+          },
+          Storage: {
+            region: 'us-east-1',
+            bucket: 'milkshake-user-images',
+            identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
+            level: 'protected'
+          }
         });
-    </script>
+      
+        // Your file upload logic goes below this
+      </script>
 </head>
 <body>
     <h1>Create a New Profile</h1>
