@@ -1,8 +1,14 @@
 import { fetchProfiles } from './api.js';
-import { Amplify, Storage } from './aws-amplify';
-import awsconfig from './aws-exports';
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from './aws-exports.js';
+import {
+  uploadData,
+  getUrl,
+} from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
 
+// Configure Amplify once using aws-exports.js
 Amplify.configure(awsconfig);
+
 // Convert File to Base64
 export function toBase64(file) {
     return new Promise((resolve, reject) => {
@@ -68,42 +74,10 @@ window.onload = async () => {
     }
 };
 
-// main.js – clean and focused on S3 image upload via Amplify
-
-
-import {
-  uploadData,
-  getUrl,
-} from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
-//moved to use import from pack { Amplify, Storage } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
-import awsExports from './aws-exports.js';Amplify.configure(awsExports);
-
-
-// Replace these with your actual values from the Amplify Console or aws-exports.js
-Amplify.configure({
-  Auth: {
-    region: 'us-east-1',
-    // us-east-1:082556d2-7fc8-4562-90fa-15bf4df96698
-
-    identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
-    userPoolId: 'us-east-1_OTuVdDtSR',
-    userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc',
-  },
-  Storage: {
-    region: 'us-east-1',
-    bucket: 'milkshake-user-images',
-    identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
-    level: 'protected',
-  },
-});
-
-export { Storage };
-// ✅ Export only the functions ne app
 export {
   uploadData,
-  getUrl
-  
+  getUrl,
+  Storage
 };
+
 console.log('Amplify Storage config:', Amplify.getConfig());
-
-
