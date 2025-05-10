@@ -76,7 +76,6 @@ import {
   getUrl,
 } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
 //moved to use import from pack { Amplify, Storage } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
-import { Amplify, Storage } from 'aws-amplify';
 import awsExports from './aws-exports.js';Amplify.configure(awsExports);
 
 export { Storage };
