@@ -1,5 +1,5 @@
 import { fetchProfiles } from './api.js';
-import { Amplify, Storage } from 'aws-amplify';
+import { Amplify, Storage } from './aws-amplify';
 import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
