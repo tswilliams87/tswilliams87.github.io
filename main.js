@@ -1,6 +1,6 @@
 import { fetchProfiles } from './api.js';
 import { Amplify, Storage } from './aws-amplify';
-import awsconfig from './aws-exports.js';
+import awsconfig from '/aws-exports.js';
 import {
   uploadData,
   getUrl,
