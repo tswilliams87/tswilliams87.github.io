@@ -67,26 +67,28 @@ window.onload = async () => {
 
 // main.js – clean and focused on S3 image upload via Amplify
 
-import { Amplify } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/core@6.3.2/+esm';
+
 import {
   uploadData,
   getUrl,
 } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
+import { Amplify, Storage } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
 
-// ✅ Correct Amplify Storage Configuration
 Amplify.configure({
+  Auth: {
+    region: 'us-east-1',
+    identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
+  },
   Storage: {
     region: 'us-east-1',
     bucket: 'milkshake-user-images',
     identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
     level: 'protected',
-  }
+  },
 });
 
-// Optional debug log to confirm bucket is set
-console.log('Amplify Storage Configured:', Amplify._config?.Storage);
-
 export { Storage };
+
 // ✅ Export only the functions needed by your app
 export {
   uploadData,
