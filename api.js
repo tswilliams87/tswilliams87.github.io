@@ -1,5 +1,7 @@
 const API_BASE_URL = 'https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles';
 
+
+Amplify.configure(awsconfig);
 // Fetch the latest profile ID from the backend
 export async function getLastProfileId() {
     try {
