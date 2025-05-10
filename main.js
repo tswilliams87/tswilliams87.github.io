@@ -77,10 +77,13 @@ import {
 } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
 import { Amplify, Storage } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
 
+// Replace these with your actual values from the Amplify Console or aws-exports.js
 Amplify.configure({
   Auth: {
     region: 'us-east-1',
     identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
+    userPoolId: 'us-east-1_OTuVdDtSR',
+    userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc',
   },
   Storage: {
     region: 'us-east-1',
@@ -91,8 +94,7 @@ Amplify.configure({
 });
 
 export { Storage };
-
-// ✅ Export only the functions needed by your app
+// ✅ Export only the functions ne app
 export {
   uploadData,
   getUrl

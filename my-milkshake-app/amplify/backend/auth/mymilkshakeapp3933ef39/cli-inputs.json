@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "localmilkaa608e10_identitypool_aa608e10",
-    "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "localmaa608e10",
-    "userPoolName": "localmilkaa608e10_userpool_aa608e10",
+    "identityPoolName": "mymilkshakeapp3933ef39_identitypool_3933ef39",
+    "allowUnauthenticatedIdentities": true,
+    "resourceNameTruncated": "mymilk3933ef39",
+    "userPoolName": "mymilkshakeapp3933ef39_userpool_3933ef39",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -14,7 +14,7 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "verify login",
+    "emailVerificationSubject": "Your verification code",
     "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
@@ -29,16 +29,14 @@
       "email"
     ],
     "userpoolClientReadAttributes": [
-      "email",
-      "name",
-      "picture"
+      "email"
     ],
-    "userpoolClientLambdaRole": "localmaa608e10_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": true,
-    "sharedId": "aa608e10",
-    "resourceName": "localmilkaa608e10",
+    "userpoolClientLambdaRole": "mymilk3933ef39_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "sharedId": "3933ef39",
+    "resourceName": "mymilkshakeapp3933ef39",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "manual",
+    "useDefault": "default",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
@@ -56,16 +54,6 @@
       ]
     },
     "breakCircularDependency": true,
-    "dependsOn": [],
-    "thirdPartyAuth": false,
-    "userPoolGroups": false,
-    "adminQueries": false,
-    "triggers": {},
-    "hostedUI": false,
-    "authProviders": [],
-    "parentStack": {
-      "Ref": "AWS::StackId"
-    },
-    "permissions": []
+    "dependsOn": []
   }
 }

@@ -1,13 +1,13 @@
 {
   "whyContinueWithGen1": "I am a current Gen 1 user",
-  "projectName": "localmilk",
+  "projectName": "mymilkshakeapp",
   "version": "3.1",
   "frontend": "javascript",
   "javascript": {
-    "framework": "none",
+    "framework": "react",
     "config": {
       "SourceDir": "src",
-      "DistributionDir": "dist",
+      "DistributionDir": "build",
       "BuildCommand": "npm run-script build",
       "StartCommand": "npm run-script start"
     }
