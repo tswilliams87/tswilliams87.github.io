@@ -86,9 +86,13 @@ Amplify.configure({
 // Optional debug log to confirm bucket is set
 console.log('Amplify Storage Configured:', Amplify._config?.Storage);
 
+export { Storage };
 // ✅ Export only the functions needed by your app
 export {
   uploadData,
   getUrl
+  
 };
+console.log('Amplify Storage config:', Amplify.getConfig());
+
 
