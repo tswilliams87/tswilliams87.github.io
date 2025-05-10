@@ -81,6 +81,8 @@ import {
 Amplify.configure({
   Auth: {
     region: 'us-east-1',
+    // us-east-1:082556d2-7fc8-4562-90fa-15bf4df96698
+
     identityPoolId: 'us-east-1:2f68656e-3c97-4ead-8c12-1376233ca7a0',
     userPoolId: 'us-east-1_OTuVdDtSR',
     userPoolWebClientId: '60sho3r6fiq09ttgs00hvnsqbc',
