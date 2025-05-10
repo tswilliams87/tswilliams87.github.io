@@ -1,6 +1,6 @@
 import { fetchProfiles } from './api.js';
 import { Amplify, Storage } from 'aws-amplify';
-import awsconfig from './aws-exports';
+//import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
 // Convert File to Base64
@@ -75,7 +75,7 @@ import {
   uploadData,
   getUrl,
 } from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
-import { Amplify, Storage } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
+//moved to use import from pack { Amplify, Storage } from 'https://cdn.jsdelivr.net/npm/aws-amplify@6.12.0/+esm';
 
 // Replace these with your actual values from the Amplify Console or aws-exports.js
 Amplify.configure({
