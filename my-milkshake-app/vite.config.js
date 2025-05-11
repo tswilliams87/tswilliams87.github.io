@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 
 // Vite config for a plain HTML/JS project
 export default defineConfig({
+  base: '/',
   root: 'src',
   publicDir: '../public',
   build: {
@@ -13,3 +14,4 @@ export default defineConfig({
     open: true
   }
 })
+
