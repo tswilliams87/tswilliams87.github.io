@@ -8,6 +8,14 @@ export default defineConfig({
   build: {
     outDir: '../dist',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        createProfile: './create-profile.html',
+        carousel: './carousel.html',
+        home: './home.html',
+        // Add other HTML files as needed
+      },
   },
   server: {
     port: 3000,
