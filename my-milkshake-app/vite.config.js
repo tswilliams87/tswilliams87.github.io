@@ -1,29 +1,26 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
-// Vite config for a plain HTML/JS project
+// Vite config for multi-page HTML/JS project
 export default defineConfig({
-  base: '/',
-  root: 'src',
-  publicDir: '../public',
+  base: '/',                 // base path for production
+  root: 'src',               // source folder for entry HTML and JS
+  publicDir: '../public',    // public assets folder
   build: {
-    outDir: '../dist',
-    emptyOutDir: true,
+    outDir: '../dist',       // output directory for built files
+    emptyOutDir: true,       // clean output dir before build
     rollupOptions: {
       input: {
-        main: './index.html',
-        createProfile: './create-profile.html',
-        carousel: './carousel.html',
-        home: './home.html',
-        // Add other HTML files as needed
+        main: 'src/index.html',
+        createProfile: 'src/create-profile.html',
+        carousel: 'src/carousel.html',
+        home: 'src/home.html',
+        profile: 'src/profile.html',
+        editProfile: 'src/edit-profile.html',
       },
+    },
   },
   server: {
-    port: 3000,
-    open: true
+    port: 3000,              // dev server port
+    open: true               // open in browser on start
   }
-
-}
-})
-
-
-
+});
