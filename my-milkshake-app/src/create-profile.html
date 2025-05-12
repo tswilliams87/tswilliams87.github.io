@@ -69,7 +69,7 @@
       try {
         statusMessage.textContent = "Uploading image...";
         await Storage.put(filename, file, {
-          level: 'public',
+          level: 'protected',
           contentType: file.type,
         });
 
