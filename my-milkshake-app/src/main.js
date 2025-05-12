@@ -1,22 +1,11 @@
 import { Amplify } from 'aws-amplify';
-import { Storage } from '@aws-amplify/storage'; // ✅ FIXED import path
+import { Storage } from '@aws-amplify/storage';
 import awsExports from './aws-exports.js';
 import { fetchProfiles } from './api.js';
 
-
 Amplify.configure(awsExports);
-/*
-// Convert File to Base64
-export function toBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = error => reject(error);
-  });
-}
-*/
-// Create a profile and send image to S3 via Lambda
+
+// Upload image to S3 and create a profile in DynamoDB via Lambda
 export async function createProfileWithImage(form) {
   const name = form.name.value;
   const favoriteThing = form.favoriteThing.value;
@@ -26,16 +15,25 @@ export async function createProfileWithImage(form) {
     throw new Error("No picture file uploaded.");
   }
 
-  //const imageBase64 = await toBase64(file);
   const filename = `${Date.now()}_${file.name}`;
 
+  // Upload to S3 using Amplify Storage
+  try {
+    await Storage.put(`profiles/${filename}`, file, {
+      contentType: file.type
+    });
+  } catch (uploadError) {
+    console.error("S3 upload failed:", uploadError);
+    throw new Error("Failed to upload image to S3.");
+  }
+
+  // Then call the Lambda to store the metadata in DynamoDB
   const payload = {
     id: Date.now().toString(),
     name,
     favoriteThing,
-    //imageBase64,
-    filename,
-    picture: ""
+    filename, // Backend uses this to build the S3 URL
+    picture: "" // Not used anymore but left for backward compatibility
   };
 
   const response = await fetch('https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles', {
@@ -52,13 +50,14 @@ export async function createProfileWithImage(form) {
   return await response.json();
 }
 
+// Load and render profiles on page load
 window.onload = async () => {
   try {
     const profiles = await fetchProfiles();
     console.log('Profiles:', profiles);
 
     const profileList = document.getElementById('profile-list');
-    if (profileList) {
+    if (profileList && Array.isArray(profiles)) {
       profiles.forEach(profile => {
         const listItem = document.createElement('li');
         listItem.textContent = `${profile.name} (Favorite: ${profile.favoriteThing})`;
@@ -71,19 +70,3 @@ window.onload = async () => {
 };
 
 export { Storage };
-
-
-/*
-import {
-  uploadData
-  //getUrl,
-} from 'https://cdn.jsdelivr.net/npm/@aws-amplify/storage@6.8.4/+esm';
-
-
-export {
-  uploadData,
-  //getUrl
-};
-*/
-
-//console.log('Amplify Storage config:', Amplify.getConfig());
