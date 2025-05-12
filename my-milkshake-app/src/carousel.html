@@ -124,7 +124,7 @@
 
   <script type="module">
     import { fetchProfiles } from './api.js';
-    import { getUrl } from './main.js';
+    //import { getUrl } from './main.js';
 
     const carousel = document.getElementById('carousel');
     const reloadBtn = document.getElementById('reload-btn');
@@ -163,7 +163,7 @@
   try {
     const result = await Storage.get(s3Key, { level: 'protected' });
     console.log('Image URL:', result.url); // Debugging image URL
-    
+
     img.src = result.url;
   } catch {
     img.src = 'https://via.placeholder.com/300x400';
