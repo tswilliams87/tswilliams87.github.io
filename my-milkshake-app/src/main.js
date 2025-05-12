@@ -32,8 +32,8 @@ export async function createProfileWithImage(form) {
     id: Date.now().toString(),
     name,
     favoriteThing,
-    filename, // Backend uses this to build the S3 URL
-    picture: "" // Not used anymore but left for backward compatibility
+    filename // Backend uses this to build the S3 URL
+
   };
 
   const response = await fetch('https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles', {
