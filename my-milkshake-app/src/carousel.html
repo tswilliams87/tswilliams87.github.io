@@ -161,7 +161,9 @@
       const img = document.createElement('img');
       if (s3Key) {
   try {
-    const result = await getUrl({ key: s3Key, options: { accessLevel: 'protected' } });
+    const result = await Storage.get(s3Key, { level: 'protected' });
+    console.log('Image URL:', result.url); // Debugging image URL
+    
     img.src = result.url;
   } catch {
     img.src = 'https://via.placeholder.com/300x400';
