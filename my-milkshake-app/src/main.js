@@ -4,11 +4,6 @@ import awsExports from './aws-exports.js';
 import { fetchProfiles } from './api.js';
 
 Amplify.configure({awsExports});
-Storage.configure({
-  bucket: awsExports.aws_user_files_s3_bucket,
-  region: awsExports.aws_user_files_s3_bucket_region,
-  level: 'public' // use 'protected' or 'private' if needed
-});
 
 // Upload image to S3 and create a profile in DynamoDB via Lambda
 export async function createProfileWithImage(form) {
