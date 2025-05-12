@@ -73,7 +73,7 @@ window.onload = async () => {
 export { Storage };
 
 
-
+/*
 import {
   uploadData
   //getUrl,
@@ -84,5 +84,6 @@ export {
   uploadData,
   //getUrl
 };
+*/
 
 console.log('Amplify Storage config:', Amplify.getConfig());
