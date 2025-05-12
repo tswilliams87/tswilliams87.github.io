@@ -86,4 +86,4 @@ export {
 };
 */
 
-console.log('Amplify Storage config:', Amplify.getConfig());
+//console.log('Amplify Storage config:', Amplify.getConfig());
