@@ -5,7 +5,7 @@ import { fetchProfiles } from './api.js';
 
 
 Amplify.configure(awsExports);
-
+/*
 // Convert File to Base64
 export function toBase64(file) {
   return new Promise((resolve, reject) => {
@@ -15,7 +15,7 @@ export function toBase64(file) {
     reader.onerror = error => reject(error);
   });
 }
-
+*/
 // Create a profile and send image to S3 via Lambda
 export async function createProfileWithImage(form) {
   const name = form.name.value;
@@ -26,14 +26,14 @@ export async function createProfileWithImage(form) {
     throw new Error("No picture file uploaded.");
   }
 
-  const imageBase64 = await toBase64(file);
+  //const imageBase64 = await toBase64(file);
   const filename = `${Date.now()}_${file.name}`;
 
   const payload = {
     id: Date.now().toString(),
     name,
     favoriteThing,
-    imageBase64,
+    //imageBase64,
     filename,
     picture: ""
   };
