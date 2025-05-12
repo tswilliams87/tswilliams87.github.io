@@ -2,6 +2,11 @@ const API_BASE_URL = 'https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/pro
 import { Amplify } from 'aws-amplify';
 import awsExports from './aws-exports';
 Amplify.configure({awsExports});
+Storage.configure({
+    bucket: awsExports.aws_user_files_s3_bucket,
+    region: awsExports.aws_user_files_s3_bucket_region,
+    level: 'public' // use 'protected' or 'private' if needed
+  });
 
 
 //Amplify.configure(awsconfig);
