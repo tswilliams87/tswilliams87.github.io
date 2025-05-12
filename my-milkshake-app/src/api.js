@@ -4,7 +4,7 @@ import awsExports from './aws-exports';
 Amplify.configure(awsExports);
 
 
-Amplify.configure(awsconfig);
+//Amplify.configure(awsconfig);
 // Fetch the latest profile ID from the backend
 export async function getLastProfileId() {
     try {
