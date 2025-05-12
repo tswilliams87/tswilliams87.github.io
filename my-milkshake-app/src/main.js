@@ -3,7 +3,16 @@ import { Storage } from '@aws-amplify/storage';
 import awsExports from './aws-exports.js';
 import { fetchProfiles } from './api.js';
 
-Amplify.configure({awsExports});
+Amplify.configure({
+  ...awsExports,
+  Storage: {
+    AWSS3: {
+      bucket: 'milkshake-user-images', // ✅ Force correct bucket
+      region: 'us-east-1',
+      level: 'protected', // Or 'protected' if you're using identity-based access
+    }
+  }
+});
 
 // Upload image to S3 and create a profile in DynamoDB via Lambda
 export async function createProfileWithImage(form) {

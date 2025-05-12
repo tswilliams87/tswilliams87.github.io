@@ -1,7 +1,16 @@
 const API_BASE_URL = 'https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles';
 import { Amplify } from 'aws-amplify';
 import awsExports from './aws-exports';
-Amplify.configure({awsExports});
+Amplify.configure({
+    ...awsExports,
+    Storage: {
+      AWSS3: {
+        bucket: 'milkshake-user-images', // ✅ Force correct bucket
+        region: 'us-east-1',
+        level: 'protected', // Or 'protected' if you're using identity-based access
+      }
+    }
+  });
 
 
 //Amplify.configure(awsconfig);
