@@ -11,7 +11,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "s365b63a5e": {
+    "milkshakeuserimages": {
       "BucketName": "string",
       "Region": "string"
     }

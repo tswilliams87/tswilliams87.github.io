@@ -1,6 +1,6 @@
 {
-  "resourceName": "s365b63a5e",
-  "policyUUID": "65b63a5e",
+  "resourceName": "milkshakeuserimages",
+  "policyUUID": "7a1c08c3",
   "bucketName": "milkshake-user-images",
   "storageAccess": "authAndGuest",
   "guestAccess": [
@@ -8,7 +8,9 @@
     "READ"
   ],
   "authAccess": [
-    "CREATE_AND_UPDATE"
+    "CREATE_AND_UPDATE",
+    "READ"
   ],
+  "triggerFunction": "NONE",
   "groupAccess": {}
 }

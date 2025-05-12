@@ -26,7 +26,7 @@
     }
   },
   "storage": {
-    "s365b63a5e": {
+    "milkshakeuserimages": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"
