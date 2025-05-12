@@ -1,0 +1,73 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mymilkshakeapp-dev-15895-authRole",
+      "UnauthRoleArn": "arn:aws:iam::828122738432:role/amplify-mymilkshakeapp-dev-15895-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::828122738432:role/amplify-mymilkshakeapp-dev-15895-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mymilkshakeapp-dev-15895-deployment",
+      "UnauthRoleName": "amplify-mymilkshakeapp-dev-15895-unauthRole",
+      "StackName": "amplify-mymilkshakeapp-dev-15895",
+      "StackId": "arn:aws:cloudformation:us-east-1:828122738432:stack/amplify-mymilkshakeapp-dev-15895/4cd86270-2d48-11f0-98c2-0e593e44dc7b",
+      "AmplifyAppId": "dwkc642mpbnd0"
+    }
+  },
+  "auth": {
+    "mymilkshakeapp3933ef39": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-mymilkshakeapp-dev-15895-deployment/amplify-cfn-templates/auth/mymilkshakeapp3933ef39-cloudformation-template.json",
+        "logicalId": "authmymilkshakeapp3933ef39"
+      },
+      "lastPushTimeStamp": "2025-05-10T02:51:05.132Z",
+      "output": {
+        "UserPoolId": "us-east-1_RRrppKREr",
+        "AppClientIDWeb": "ntujhfc8u6sofid6vtqhkvh3b",
+        "AppClientID": "7n5vfsbcsudg8ep4id6lm0sqnm",
+        "IdentityPoolId": "us-east-1:082556d2-7fc8-4562-90fa-15bf4df96698",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:828122738432:userpool/us-east-1_RRrppKREr",
+        "IdentityPoolName": "mymilkshakeapp3933ef39_identitypool_3933ef39__dev",
+        "UserPoolName": "mymilkshakeapp3933ef39_userpool_3933ef39"
+      },
+      "lastPushDirHash": "pb1tplFBHiwTvf3jaul9P/z7k7s="
+    }
+  },
+  "storage": {
+    "s365b63a5e": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "lastPushTimeStamp": "2025-05-10T02:51:05.132Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-mymilkshakeapp-dev-15895-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storages365b63a5e"
+      },
+      "output": {
+        "BucketName": "milkshake-user-images15895-dev",
+        "Region": "us-east-1"
+      },
+      "lastPushDirHash": "GI4TgdoGJ1CQnFy/eLkERkDO09Q="
+    }
+  }
+}
