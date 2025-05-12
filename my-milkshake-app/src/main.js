@@ -1,6 +1,8 @@
 import awsconfig from './aws-exports.js';
 import { fetchProfiles } from './api.js';
-import { Amplify, Storage } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
+import { Storage } from '@aws-amplify/storage';
+
 
 import {
   uploadData,
