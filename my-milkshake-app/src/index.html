@@ -5,6 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Milkshake</title>
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    .navbar {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       padding: 10px 20px;
+       background-color: #f8f9fa;
+       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+       position: fixed;
+       top: 0;
+       left: 0;
+       width: 100%;
+       z-index: 1000;
+     }
+ 
+     .navbar a {
+       margin: 0 15px;
+       text-decoration: none;
+       color: #007bff;
+       font-weight: bold;
+       -webkit-transition: color 0.3s ease;
+       transition: color 0.3s ease;
+     }
+ 
+     .navbar a:hover {
+       text-decoration: underline;
+     }
+     </style>
 </head>
 <body>
   <div class="landing-container">
