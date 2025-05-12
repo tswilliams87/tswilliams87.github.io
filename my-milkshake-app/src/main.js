@@ -25,7 +25,6 @@ export async function createProfileWithImage(form) {
   // Upload to S3 using Amplify Storage
   try {
     await Storage.put(`profiles/${filename}`, file, {
-      level: 'public', // use 'protected' or 'private' if needed
       contentType: file.type
     });
   } catch (uploadError) {
