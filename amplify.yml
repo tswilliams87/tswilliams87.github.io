@@ -2,12 +2,16 @@ version: 1
 frontend:
   phases:
     preBuild:
-      commands: []
+      commands:
+        - cd my-milkshake-app
+        - npm ci
     build:
-      commands: []
+      commands:
+        - npm run build
   artifacts:
-    baseDirectory: /
+    baseDirectory: my-milkshake-app/dist
     files:
       - '**/*'
   cache:
-    paths: []
+    paths:
+      - my-milkshake-app/node_modules/**/*

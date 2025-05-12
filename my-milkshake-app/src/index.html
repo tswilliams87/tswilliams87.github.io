@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milkshake</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .navbar {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       padding: 10px 20px;
+       background-color: #f8f9fa;
+       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+       position: fixed;
+       top: 0;
+       left: 0;
+       width: 100%;
+       z-index: 1000;
+     }
+ 
+     .navbar a {
+       margin: 0 15px;
+       text-decoration: none;
+       color: #007bff;
+       font-weight: bold;
+       -webkit-transition: color 0.3s ease;
+       transition: color 0.3s ease;
+     }
+ 
+     .navbar a:hover {
+       text-decoration: underline;
+     }
+     </style>
+</head>
+<body>
+  <div class="landing-container">
+    <h1>Welcome to Milkshake that brings all the boys to the yard</h1>
+    <div class="landing-options">
+      <button id="create-profile-btn">Create Profile</button>
+      <button id="continue-guest-btn">Head to the Yard</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('create-profile-btn').addEventListener('click', () => {
+      window.location.href = '/create-profile.html';
+    });
+
+    document.getElementById('continue-guest-btn').addEventListener('click', () => {
+      // Navigate directly to the carousel page
+      window.location.href = '/carousel.html';
+    });
+  </script>
+</body>
+</html>
