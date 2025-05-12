@@ -1,13 +1,20 @@
 import { Amplify } from 'aws-amplify';
+import { Storage } from '@aws-amplify/storage';
 import awsExports from './aws-exports.js';
 import { fetchProfiles } from './api.js';
 
-// Configure Amplify (Auth still used if applicable)
 Amplify.configure({
-  ...awsExports
+  ...awsExports,
+  Storage: {
+    AWSS3: {
+      bucket: 'milkshake-user-images', // ✅ Force correct bucket
+      region: 'us-east-1',
+      level: 'protected', // Or 'protected' if you're using identity-based access
+    }
+  }
 });
 
-// Upload image via Lambda only — no Amplify Storage.put
+// Upload image to S3 and create a profile in DynamoDB via Lambda
 export async function createProfileWithImage(form) {
   const name = form.name.value;
   const favoriteThing = form.favoriteThing.value;
@@ -19,12 +26,23 @@ export async function createProfileWithImage(form) {
 
   const filename = `${Date.now()}_${file.name}`;
 
+  // Upload to S3 using Amplify Storage
+  try {
+    await Storage.put(`profiles/${filename}`, file, {
+      contentType: file.type
+    });
+  } catch (uploadError) {
+    console.error("S3 upload failed:", uploadError);
+    throw new Error("Failed to upload image to S3.");
+  }
+
+  // Then call the Lambda to store the metadata in DynamoDB
   const payload = {
     id: Date.now().toString(),
     name,
     favoriteThing,
-    filename,
-    picture: "" // unused in Lambda, left for compatibility
+    filename // Backend uses this to build the S3 URL
+
   };
 
   const response = await fetch('https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles', {
@@ -41,14 +59,14 @@ export async function createProfileWithImage(form) {
   return await response.json();
 }
 
-// Load and render profiles if element exists
+// Load and render profiles on page load
 window.onload = async () => {
   try {
     const profiles = await fetchProfiles();
     console.log('Profiles:', profiles);
 
     const profileList = document.getElementById('profile-list');
-    if (profileList) {
+    if (profileList && Array.isArray(profiles)) {
       profiles.forEach(profile => {
         const listItem = document.createElement('li');
         listItem.textContent = `${profile.name} (Favorite: ${profile.favoriteThing})`;
@@ -59,3 +77,5 @@ window.onload = async () => {
     console.error('Error loading profiles:', error);
   }
 };
+
+export { Storage };
