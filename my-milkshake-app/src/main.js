@@ -1,5 +1,5 @@
 import { Amplify } from 'aws-amplify';
-import { Storage } from 'aws-amplify/storage';
+import { Storage } from '@aws-amplify/storage'; // ✅ FIXED import path
 import awsExports from './aws-exports.js';
 import { fetchProfiles } from './api.js';
 
