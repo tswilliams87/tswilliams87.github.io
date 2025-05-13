@@ -1,24 +1,22 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-localmilk-dev-ff127-authRole",
-      "UnauthRoleArn": "arn:aws:iam::828122738432:role/amplify-localmilk-dev-ff127-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::828122738432:role/amplify-localmilk-dev-ff127-authRole",
+      "AuthRoleName": "amplify-mymilkshakeapp-dev-071b7-authRole",
+      "UnauthRoleArn": "arn:aws:iam::828122738432:role/amplify-mymilkshakeapp-dev-071b7-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::828122738432:role/amplify-mymilkshakeapp-dev-071b7-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-localmilk-dev-ff127-deployment",
-      "UnauthRoleName": "amplify-localmilk-dev-ff127-unauthRole",
-      "StackName": "amplify-localmilk-dev-ff127",
-      "StackId": "arn:aws:cloudformation:us-east-1:828122738432:stack/amplify-localmilk-dev-ff127/d271f990-2c86-11f0-8d46-0affc9d5aeb7",
+      "DeploymentBucketName": "amplify-mymilkshakeapp-dev-071b7-deployment",
+      "UnauthRoleName": "amplify-mymilkshakeapp-dev-071b7-unauthRole",
+      "StackName": "amplify-mymilkshakeapp-dev-071b7",
+      "StackId": "arn:aws:cloudformation:us-east-1:828122738432:stack/amplify-mymilkshakeapp-dev-071b7/cdb01950-3037-11f0-bd6b-0affcd6a0c47",
       "AmplifyAppId": "d24lonrtwlrynw"
     },
     "categories": {
       "auth": {
-        "mymilkshakeapp3933ef39": {},
-        "localmilkaa608e10": {}
+        "mymilkshakeappd6919513": {}
       },
       "storage": {
-        "s365b63a5e": {},
-        "s3e36cdd9d": {}
+        "ProdDev": {}
       }
     }
   }

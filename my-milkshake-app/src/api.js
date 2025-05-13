@@ -5,7 +5,7 @@ Amplify.configure({
     ...awsExports,
     Storage: {
       AWSS3: {
-        bucket: 'milkshake-user-images-devff127-dev', // ✅ Force correct bucket
+        bucket: 'milkshakeproddevs3071b7-dev', // ✅ Force correct bucket
         region: 'us-east-1',
         level: 'public', // Or 'protected' if you're using identity-based access
       }

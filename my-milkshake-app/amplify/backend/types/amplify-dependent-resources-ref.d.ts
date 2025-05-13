@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
   "auth": {
-    "localmilkaa608e10": {
+    "mymilkshakeappd6919513": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
       "IdentityPoolId": "string",
@@ -11,7 +11,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "s3e36cdd9d": {
+    "ProdDev": {
       "BucketName": "string",
       "Region": "string"
     }

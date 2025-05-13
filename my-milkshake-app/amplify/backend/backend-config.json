@@ -1,6 +1,6 @@
 {
   "auth": {
-    "localmilkaa608e10": {
+    "mymilkshakeappd6919513": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -26,7 +26,7 @@
     }
   },
   "storage": {
-    "s3e36cdd9d": {
+    "ProdDev": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"
