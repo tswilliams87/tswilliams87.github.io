@@ -1,18 +1,17 @@
 {
-  "whyContinueWithGen1": "I am a current Gen 1 user",
-  "projectName": "mymilkshakeapp",
+  "providers": [
+    "awscloudformation"
+  ],
+  "projectName": "tswilliams87githubio",
   "version": "3.1",
   "frontend": "javascript",
   "javascript": {
-    "framework": "react",
+    "framework": "none",
     "config": {
       "SourceDir": "src",
-      "DistributionDir": "build",
+      "DistributionDir": "dist",
       "BuildCommand": "npm run-script build",
       "StartCommand": "npm run-script start"
     }
-  },
-  "providers": [
-    "awscloudformation"
-  ]
+  }
 }
