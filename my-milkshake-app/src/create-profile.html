@@ -65,13 +65,13 @@
         return;
       }
 
-      const filename = `profiles/${Date.now()}_${file.name}`;
+      const filename = `${Date.now()}_${file.name}`;
       try {
         statusMessage.textContent = "Uploading image...";
-        await Storage.put(filename, file, {
-          level: 'protected',
-          contentType: file.type,
-        });
+        await Storage.put(`profiles/${filename}`, file, {
+  level: 'public',
+  contentType: file.type
+});
 
         const imageUrl = await Storage.get(filename, { level: 'protected' });
 
