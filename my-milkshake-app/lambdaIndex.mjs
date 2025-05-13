@@ -53,7 +53,7 @@ export const handler = async (event) => {
         return errorResponse("Missing required fields", 400);
       }
 
-      const imageUrl = `https://${BUCKET_NAME}.s3.us-east-1.amazonaws.com/public/profiles/${filename}`;
+      const imageUrl = `profiles/${filename}`; // store key only
       console.log("Image URL:", imageUrl);
 
       const dbParams = {
