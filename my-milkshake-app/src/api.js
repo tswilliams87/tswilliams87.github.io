@@ -7,7 +7,7 @@ Amplify.configure({
       AWSS3: {
         bucket: 'milkshake-user-images', // ✅ Force correct bucket
         region: 'us-east-1',
-        level: 'protected', // Or 'protected' if you're using identity-based access
+        level: 'public', // Or 'protected' if you're using identity-based access
       }
     }
   });

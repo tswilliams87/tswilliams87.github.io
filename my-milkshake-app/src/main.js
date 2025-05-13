@@ -9,7 +9,7 @@ Amplify.configure({
     AWSS3: {
       bucket: 'milkshake-user-images', // ✅ Force correct bucket
       region: 'us-east-1',
-      level: 'protected', // Or 'protected' if you're using identity-based access
+      level: 'public', // Or 'protected' if you're using identity-based access
     }
   }
 });
@@ -26,7 +26,7 @@ export async function createProfileWithImage(form) {
 
   const filename = `${Date.now()}_${file.name}`;
 
-  // Upload to S3 using Amplify Storage
+  // Upload to S3 using Amplify Storage going to public and variables are at the top. 
   try {
     await Storage.put(`profiles/${filename}`, file, {
       contentType: file.type
