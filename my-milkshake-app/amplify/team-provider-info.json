@@ -1,22 +1,22 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-mymilkshakeapp-dev-15895-authRole",
-      "UnauthRoleArn": "arn:aws:iam::828122738432:role/amplify-mymilkshakeapp-dev-15895-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::828122738432:role/amplify-mymilkshakeapp-dev-15895-authRole",
+      "AuthRoleName": "amplify-mymilkshakeapp-dev-071b7-authRole",
+      "UnauthRoleArn": "arn:aws:iam::828122738432:role/amplify-mymilkshakeapp-dev-071b7-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::828122738432:role/amplify-mymilkshakeapp-dev-071b7-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-mymilkshakeapp-dev-15895-deployment",
-      "UnauthRoleName": "amplify-mymilkshakeapp-dev-15895-unauthRole",
-      "StackName": "amplify-mymilkshakeapp-dev-15895",
-      "StackId": "arn:aws:cloudformation:us-east-1:828122738432:stack/amplify-mymilkshakeapp-dev-15895/4cd86270-2d48-11f0-98c2-0e593e44dc7b",
-      "AmplifyAppId": "dwkc642mpbnd0"
+      "DeploymentBucketName": "amplify-mymilkshakeapp-dev-071b7-deployment",
+      "UnauthRoleName": "amplify-mymilkshakeapp-dev-071b7-unauthRole",
+      "StackName": "amplify-mymilkshakeapp-dev-071b7",
+      "StackId": "arn:aws:cloudformation:us-east-1:828122738432:stack/amplify-mymilkshakeapp-dev-071b7/cdb01950-3037-11f0-bd6b-0affcd6a0c47",
+      "AmplifyAppId": "d24lonrtwlrynw"
     },
     "categories": {
       "auth": {
-        "mymilkshakeapp3933ef39": {}
+        "mymilkshakeappd6919513": {}
       },
       "storage": {
-        "s365b63a5e": {}
+        "ProdDev": {}
       }
     }
   }

@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "mymilkshakeapp3933ef39_identitypool_3933ef39",
+    "identityPoolName": "mymilkshakeappd6919513_identitypool_d6919513",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "mymilk3933ef39",
-    "userPoolName": "mymilkshakeapp3933ef39_userpool_3933ef39",
+    "resourceNameTruncated": "mymilkd6919513",
+    "userPoolName": "mymilkshakeappd6919513_userpool_d6919513",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,10 +31,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "mymilk3933ef39_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "mymilkd6919513_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "3933ef39",
-    "resourceName": "mymilkshakeapp3933ef39",
+    "sharedId": "d6919513",
+    "resourceName": "mymilkshakeappd6919513",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "userPoolGroupList": [],
