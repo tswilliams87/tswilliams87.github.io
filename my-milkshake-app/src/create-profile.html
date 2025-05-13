@@ -73,7 +73,7 @@
   contentType: file.type
 });
 
-        const imageUrl = await Storage.get(filename, { level: 'protected' });
+        const imageUrl = await Storage.get(filename, { level: 'public' });
 
         statusMessage.textContent = "Saving profile...";
         const lastProfileId = await getLastProfileId();
