@@ -123,106 +123,97 @@
   <div id="action-popup" class="action-popup"></div>
 
   <script type="module">
-    import { fetchProfiles } from './api.js';
-    //import { getUrl } from './main.js';
+    <!-- Inside <script type="module"> -->
+import { fetchProfiles } from './api.js';
+import { Storage } from 'aws-amplify';
 
-    const carousel = document.getElementById('carousel');
-    const reloadBtn = document.getElementById('reload-btn');
-    const actionPopup = document.getElementById('action-popup');
-    const nopeBtn = document.getElementById('nope-btn');
-    const yesBtn = document.getElementById('yes-btn');
+const carousel = document.getElementById('carousel');
+const reloadBtn = document.getElementById('reload-btn');
+const actionPopup = document.getElementById('action-popup');
+const nopeBtn = document.getElementById('nope-btn');
+const yesBtn = document.getElementById('yes-btn');
 
-    let profiles = [];
-    let currentIndex = 0;
+let profiles = [];
+let currentIndex = 0;
 
-    async function loadProfiles() {
-      try {
-        const response = await fetchProfiles();
-        console.log('Profiles Response:', response); // Debugging API response
-        profiles = response.data; // Extract the `data` array
-        console.log('Extracted Profiles:', profiles); // Log the extracted profiles
-        currentIndex = 0;
-        updateCarousel();
-        reloadBtn.style.display = 'none';
-      } catch (error) {
-        console.error('Failed to fetch profiles:', error);
-      }
-    }
-
-   async function createCard(profile) {
-      // Extract values from the nested objects
-      const name = profile.name?.S || 'Unknown';
-      const s3Key = profile.picture?.S;
-      const favoriteThing = profile.favoriteThing?.S || 'Not specified';
-
-      const card = document.createElement('div');
-      card.className = 'card';
-
-      const img = document.createElement('img');
-      if (s3Key) {
+async function loadProfiles() {
   try {
-    const result = await Storage.get(s3Key, { level: 'public' });
-    console.log('Image URL:', result.url); // Debugging image URL
+    const response = await fetchProfiles();
+    profiles = response.data;
+    currentIndex = 0;
+    await updateCarousel(); // Await the async function
+    reloadBtn.style.display = 'none';
+  } catch (error) {
+    console.error('Failed to fetch profiles:', error);
+  }
+}
 
-    img.src = result.url;
-  } catch {
+async function createCard(profile) {
+  const name = profile.name?.S || 'Unknown';
+  const s3Key = profile.picture?.S;
+  const favoriteThing = profile.favoriteThing?.S || 'Not specified';
+
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  const img = document.createElement('img');
+  if (s3Key) {
+    try {
+      const url = await Storage.get(s3Key, { level: 'public' });
+      img.src = url;
+    } catch (error) {
+      console.error('Image fetch failed:', error);
+      img.src = 'https://via.placeholder.com/300x400';
+    }
+  } else {
     img.src = 'https://via.placeholder.com/300x400';
   }
-} else {
-  img.src = 'https://via.placeholder.com/300x400';
+  img.alt = name;
+
+  const nameElement = document.createElement('h2');
+  nameElement.textContent = name;
+
+  const favorite = document.createElement('p');
+  favorite.textContent = `Favorite: ${favoriteThing}`;
+
+  card.appendChild(img);
+  card.appendChild(nameElement);
+  card.appendChild(favorite);
+
+  return card;
 }
-      img.alt = name;
 
-      const nameElement = document.createElement('h2');
-      nameElement.textContent = name;
+async function updateCarousel() {
+  carousel.innerHTML = '';
+  if (currentIndex < profiles.length) {
+    const currentProfile = profiles[currentIndex];
+    const card = await createCard(currentProfile);
+    carousel.appendChild(card);
+  } else {
+    carousel.innerHTML = '<p>No more profiles</p>';
+    reloadBtn.style.display = 'block';
+  }
+}
 
-      const favorite = document.createElement('p');
-      favorite.textContent = `Favorite: ${favoriteThing}`;
+function showPopup(action) {
+  actionPopup.textContent = action === 'yes' ? 'Yes, please' : 'Nope';
+  actionPopup.className = `action-popup ${action}`;
+  actionPopup.style.display = 'block';
+  setTimeout(() => actionPopup.style.display = 'none', 1000);
+}
 
-      card.appendChild(img);
-      card.appendChild(nameElement);
-      card.appendChild(favorite);
+function swipe(action) {
+  showPopup(action);
+  currentIndex++;
+  updateCarousel();
+}
 
-      return card;
-    }
+nopeBtn.addEventListener('click', () => swipe('nope'));
+yesBtn.addEventListener('click', () => swipe('yes'));
+reloadBtn.addEventListener('click', loadProfiles);
 
-    function updateCarousel() {
-      carousel.innerHTML = '';
-      if (currentIndex < profiles.length) {
-        const currentProfile = profiles[currentIndex];
-        console.log('Current Profile:', currentProfile); // Debug profile being displayed
-        const card = createCard(currentProfile);
-        if (card) carousel.appendChild(card);
-      } else {
-        carousel.innerHTML = '<p>No more profiles</p>';
-        reloadBtn.style.display = 'block';
-      }
-    }
+loadProfiles();
 
-    function showPopup(action) {
-      actionPopup.textContent = action === 'yes' ? 'Yes, please' : 'Nope';
-      actionPopup.className = `action-popup ${action}`;
-      actionPopup.style.display = 'block';
-
-      setTimeout(() => {
-        actionPopup.style.display = 'none';
-      }, 1000);
-    }
-
-    function swipe(action) {
-      showPopup(action);
-      currentIndex++;
-      updateCarousel();
-    }
-
-    // Add event listeners for buttons
-    nopeBtn.addEventListener('click', () => swipe('nope'));
-    yesBtn.addEventListener('click', () => swipe('yes'));
-
-    // Reload profiles button
-    reloadBtn.addEventListener('click', loadProfiles);
-
-    loadProfiles();
   </script>
 </body>
 </html>
