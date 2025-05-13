@@ -87,7 +87,7 @@ export const handler = async (event) => {
           id: { S: id },
           name: { S: name },
           favoriteThing: { S: favoriteThing },
-          picture: { S: picture }
+          picture: { S: imageUrl }
         }
       };
 
