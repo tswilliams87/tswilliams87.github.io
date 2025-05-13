@@ -32,7 +32,6 @@ amplify/backend/.temp
 build/
 dist/
 node_modules/
-
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart
@@ -43,3 +42,4 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 .DS_Store
+my-milkshake-app.zip

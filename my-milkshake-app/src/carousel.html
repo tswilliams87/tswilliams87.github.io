@@ -161,7 +161,7 @@
       const img = document.createElement('img');
       if (s3Key) {
   try {
-    const result = await Storage.get(s3Key, { level: 'protected' });
+    const result = await Storage.get(s3Key, { level: 'public' });
     console.log('Image URL:', result.url); // Debugging image URL
 
     img.src = result.url;
