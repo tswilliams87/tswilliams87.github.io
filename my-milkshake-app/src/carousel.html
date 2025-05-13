@@ -123,7 +123,7 @@
   <div id="action-popup" class="action-popup"></div>
 
   <script type="module">
-    
+
 import { fetchProfiles } from './api.js';
 import { Storage } from 'aws-amplify';
 
@@ -159,8 +159,9 @@ async function createCard(profile) {
   const img = document.createElement('img');
   if (s3Key) {
     try {
-      const url = await Storage.get(s3Key, { level: 'public' });
-      img.src = url;
+     const s3Key = profile.picture?.S || profile.picture;
+const result = await Storage.get(s3Key, { level: 'public' });
+img.src = result;
     } catch (error) {
       console.error('Image fetch failed:', error);
       img.src = 'https://via.placeholder.com/300x400';
