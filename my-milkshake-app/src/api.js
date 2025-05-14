@@ -97,3 +97,18 @@ export async function fetchProfiles() {
         throw error;
     }
 }
+export async function fetchOneProfile() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/user`{
+            method: 'GET',
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const profiles = await response.json();
+        return profiles;
+    } catch (error) {
+        console.error('Error fetching profiles:', error);
+        throw error;
+    }
+}

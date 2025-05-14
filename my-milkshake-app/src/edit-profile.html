@@ -47,7 +47,7 @@
       try {
         const user = await Auth.currentAuthenticatedUser();
         userId = user.attributes.sub;
-        const response = await fetch(`https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles/${encodeURIComponent(userId)}`);
+        const response = await fetch(`https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles/user/${encodeURIComponent(userId)}`);
         const data = await response.json();
 
         nameInput.value = data.name;

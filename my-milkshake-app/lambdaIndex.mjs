@@ -41,7 +41,7 @@ export const handler = async (event) => {
       return successResponse("Latest profile retrieved successfully!", data.Items);
     }
 
-    if (method === "GET" && path === "/profiles/{id}" && event.pathParameters?.id) {
+    if (method === "GET" && path === "/profiles/user/{id}" && event.pathParameters?.id) {
       const id = decodeURIComponent(event.pathParameters.id);
       const result = await dynamoDBClient.send(new GetItemCommand({
         TableName: TABLE_NAME,
