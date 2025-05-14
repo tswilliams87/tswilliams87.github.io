@@ -1,4 +1,4 @@
-// lambdaIndex.mjs — Updated to use Cognito sub as id and store email
+// lambdaIndex.mjs — Updated to match /profiles/user/{id} via event.path
 import {
   DynamoDBClient,
   PutItemCommand,
@@ -27,7 +27,7 @@ export const handler = async (event) => {
 
   try {
     const method = event.httpMethod || "POST";
-    const path = event.resource || "/profiles";
+    const path = event.path || "/profiles";
 
     if (method === "GET" && path === "/profiles") {
       const command = new ScanCommand({ TableName: TABLE_NAME });
@@ -41,8 +41,8 @@ export const handler = async (event) => {
       return successResponse("Latest profile retrieved successfully!", data.Items);
     }
 
-    if (method === "GET" && path === "/profiles/user/{id}" && event.pathParameters?.id) {
-      const id = decodeURIComponent(event.pathParameters.id);
+    if (method === "GET" && path.startsWith("/profiles/user/")) {
+      const id = decodeURIComponent(path.split("/").pop());
       const result = await dynamoDBClient.send(new GetItemCommand({
         TableName: TABLE_NAME,
         Key: { id: { S: id } }
@@ -65,27 +65,24 @@ export const handler = async (event) => {
       if (!id || !name || !favoriteThing || !filename || !email) {
         return errorResponse("Missing required fields", 400);
       }
-      const imageUrl = `profiles/${filename}`;
       const dbParams = {
         TableName: TABLE_NAME,
         Item: {
           id: { S: id },
           name: { S: name },
           favoriteThing: { S: favoriteThing },
-          picture: { S: imageUrl },
-          email: { S: email },
-          filename: { S: filename }
+          filename: { S: filename },
+          email: { S: email }
         }
-        
       };
       await dynamoDBClient.send(new PutItemCommand(dbParams));
       return successResponse("Profile created successfully!", null, 201);
     }
 
-    if (method === "PUT" && path === "/profiles/user/") {
+    if (method === "PUT" && path.startsWith("/profiles/user/")) {
       if (!event.body) return errorResponse("Missing request body", 400);
-      const { id, name, favoriteThing, filename, email } = JSON.parse(event.body);
-      if (!id) return errorResponse("ID is required", 400);
+      const id = decodeURIComponent(path.split("/").pop());
+      const { name, favoriteThing, filename, email } = JSON.parse(event.body);
 
       const updateExpr = [];
       const names = {};
