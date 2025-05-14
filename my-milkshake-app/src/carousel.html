@@ -150,7 +150,7 @@ async function loadProfiles() {
 
 async function createCard(profile) {
   const name = profile.name?.S || 'Unknown';
-  const s3Key = profile.picture?.S;
+  const s3Key = profile.picture?.S || 'Unknown';
   const favoriteThing = profile.favoriteThing?.S || 'Not specified';
 
   const card = document.createElement('div');
