@@ -99,7 +99,7 @@ export async function fetchProfiles() {
 }
 export async function fetchOneProfile() {
     try {
-        const response = await fetch(`${API_BASE_URL}/user`{
+        const response = await fetch(`${API_BASE_URL}/user/`,{
             method: 'GET',
         });
         if (!response.ok) {
