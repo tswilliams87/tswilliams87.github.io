@@ -48,8 +48,11 @@
 
         statusMessage.textContent = 'Profile created successfully. Redirecting...';
 setTimeout(() => {
-  window.location.href = 'carousel.html';
+  window.location.href = 'confirm-profile.html';
 }, 1500);
+
+        // Optionally, you can also add the profile to your database here
+        
 
       } catch (error) {
         console.error('Signup or profile creation failed:', error);
