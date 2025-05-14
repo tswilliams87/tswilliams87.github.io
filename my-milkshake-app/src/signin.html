@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Sign In</h1>
+  <form id="signin-form">
+    <label>Email: <input type="email" name="email" required /></label><br />
+    <label>Password: <input type="password" name="password" required /></label><br />
+    <button type="submit">Sign In</button>
+  </form>
+  <div id="status-message"></div>
+
+  <script type="module">
+    import { Auth } from 'aws-amplify';
+    import awsExports from './aws-exports.js';
+    import { Amplify } from 'aws-amplify';
+
+    Amplify.configure(awsExports);
+
+    const form = document.getElementById('signin-form');
+    const statusMessage = document.getElementById('status-message');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = form.email.value;
+      const password = form.password.value;
+
+      try {
+        await Auth.signIn(email, password);
+        statusMessage.textContent = 'Sign in successful. Redirecting...';
+        setTimeout(() => {
+          window.location.href = 'carousel.html';
+        }, 1500);
+      } catch (error) {
+        console.error('Sign in failed:', error);
+        statusMessage.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>

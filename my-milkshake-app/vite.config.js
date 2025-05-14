@@ -16,7 +16,8 @@ export default defineConfig({
         home: 'src/home.html',
         profile: 'src/profile.html',
         editProfile: 'src/edit-profile.html',
-        styles: 'src/styles.css'
+        styles: 'src/styles.css',
+        signin: 'signin.html'
       },
     },
   },
