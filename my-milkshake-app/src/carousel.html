@@ -158,15 +158,15 @@ async function createCard(profile) {
 
   const img = document.createElement('img');
   if (s3Key) {
-    try {
-     
-const result = await Storage.get(s3Key, { level: 'public' });
-img.src = result;
-    } catch (error) {
-      console.error('Image fetch failed:', error);
-      img.src = 'https://via.placeholder.com/300x400';
-    }
-  } else {
+  try {
+    const result = await Storage.get(s3Key, { level: 'public' });
+    img.src = result;
+  } catch (error) {
+    console.error('Image fetch failed:', error);
+    img.src = 'https://via.placeholder.com/300x400';
+  }
+}
+ else {
     img.src = 'https://via.placeholder.com/300x400';
   }
   img.alt = name;
