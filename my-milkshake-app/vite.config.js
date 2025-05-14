@@ -17,7 +17,8 @@ export default defineConfig({
         profile: 'src/profile.html',
         editProfile: 'src/edit-profile.html',
         styles: 'src/styles.css',
-        signin: 'signin.html'
+        signin: 'src/signin.html',
+        confirmProfile: 'src/confirm-profile.html',
       },
     },
   },
