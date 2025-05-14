@@ -73,7 +73,8 @@ export const handler = async (event) => {
           name: { S: name },
           favoriteThing: { S: favoriteThing },
           picture: { S: imageUrl },
-          email: { S: email }
+          email: { S: email },
+          filename: { S: filename }
         }
         
       };
