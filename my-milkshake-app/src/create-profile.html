@@ -46,7 +46,11 @@
         console.log('Signup successful. Creating profile.');
         await createProfileWithImage(form, email);
 
-        statusMessage.textContent = 'Profile created successfully. Please check your email to confirm your account.';
+        statusMessage.textContent = 'Profile created successfully. Redirecting...';
+setTimeout(() => {
+  window.location.href = 'carousel.html';
+}, 1500);
+
       } catch (error) {
         console.error('Signup or profile creation failed:', error);
         statusMessage.textContent = `Error: ${error.message}`;
