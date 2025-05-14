@@ -22,7 +22,6 @@
   <script type="module">
     import { Auth, Storage } from 'aws-amplify';
     import awsExports from './aws-exports.js';
-    import { addProfile } from './api.js';
     import { createProfileWithImage } from './main.js';
     import { Amplify } from 'aws-amplify';
 
@@ -38,14 +37,15 @@
       const password = form.password.value;
 
       try {
-        await Auth.signUp({
+        const result = await Auth.signUp({
           username: email,
           password,
           attributes: { email }
         });
 
+        const userSub = result.userSub;
         console.log('Signup successful. Creating profile.');
-        await createProfileWithImage(form, email);
+        await createProfileWithImage(form, userSub, email);
 
         statusMessage.textContent = 'Profile created successfully. Redirecting...';
         setTimeout(() => {

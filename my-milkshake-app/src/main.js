@@ -1,7 +1,6 @@
 import { Amplify, Auth } from 'aws-amplify';
 import { Storage } from '@aws-amplify/storage';
 import awsExports from './aws-exports.js';
-import { fetchProfiles } from './api.js';
 
 Amplify.configure({
   ...awsExports,
@@ -14,7 +13,7 @@ Amplify.configure({
   }
 });
 
-export async function createProfileWithImage(form, email) {
+export async function createProfileWithImage(form, id, email) {
   const name = form.name.value;
   const favoriteThing = form.favoriteThing.value;
   const file = form.picture.files[0];
@@ -30,7 +29,6 @@ export async function createProfileWithImage(form, email) {
       level: 'public',
       contentType: file.type
     });
-
     console.log("S3 upload successful:", filename);
   } catch (uploadError) {
     console.error("S3 upload failed:", uploadError);
@@ -38,11 +36,11 @@ export async function createProfileWithImage(form, email) {
   }
 
   const payload = {
-    id: Date.now().toString(),
+    id, // Cognito sub
+    email,
     name,
     favoriteThing,
-    filename,
-    email
+    filename
   };
 
   const response = await fetch('https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles', {
