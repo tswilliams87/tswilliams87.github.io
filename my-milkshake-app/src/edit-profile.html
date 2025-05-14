@@ -7,37 +7,91 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="edit-profile-container">
-    <h1>Edit Your Profile</h1>
-    <form id="edit-profile-form">
-      <input type="text" name="name" id="name" placeholder="Enter Name" required />
-      <input type="file" name="picture" id="picture" accept="image/*" />
-      <button type="submit">Save Changes</button>
-    </form>
-  </div>
+  <h1>Edit Your Profile</h1>
+  <form id="edit-profile-form">
+    <label>Name: <input type="text" name="name" required /></label><br />
+    <label>Favorite Thing: <input type="text" name="favoriteThing" required /></label><br />
+    <label>Profile Picture: <input type="file" name="picture" accept="image/*" /></label><br />
+    <button type="submit">Update Profile</button>
+  </form>
+  <div id="status-message"></div>
 
-  <script>
-    const profile = JSON.parse(localStorage.getItem('profile'));
+  <script type="module">
+    import { Auth, Storage, API } from 'aws-amplify';
+    import awsExports from './aws-exports.js';
+    import { Amplify } from 'aws-amplify';
 
-    // Pre-fill the form with existing profile data
-    if (profile) {
-      document.getElementById('name').value = profile.name;
+    Amplify.configure(awsExports);
+
+    const form = document.getElementById('edit-profile-form');
+    const statusMessage = document.getElementById('status-message');
+
+    let userEmail = '';
+
+    async function loadProfile() {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        userEmail = user.attributes.email;
+        const response = await fetch(`https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles/${userEmail}`);
+        const data = await response.json();
+
+        form.name.value = data.name;
+        form.favoriteThing.value = data.favoriteThing;
+      } catch (error) {
+        console.error('Failed to load profile:', error);
+        statusMessage.textContent = 'Error loading profile.';
+      }
     }
 
-    document.getElementById('edit-profile-form').addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      const name = event.target.name.value;
-      const pictureInput = event.target.picture.files[0];
-      const picture = pictureInput ? URL.createObjectURL(pictureInput) : profile.picture;
+      const name = form.name.value;
+      const favoriteThing = form.favoriteThing.value;
+      const file = form.picture.files[0];
 
-      // Update the profile in localStorage
-      const updatedProfile = { name, picture };
-      localStorage.setItem('profile', JSON.stringify(updatedProfile));
+      let filename;
 
-      // Redirect back to carousel
-      window.location.href = 'carousel.html';
+      if (file) {
+        filename = `${Date.now()}_${file.name}`;
+        try {
+          await Storage.put(`profiles/${filename}`, file, {
+            level: 'public',
+            contentType: file.type
+          });
+        } catch (err) {
+          console.error('Image upload failed:', err);
+          statusMessage.textContent = 'Failed to upload image.';
+          return;
+        }
+      }
+
+      const payload = {
+        name,
+        favoriteThing,
+        ...(filename && { filename }),
+        email: userEmail
+      };
+
+      try {
+        const response = await fetch('https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error('Update failed');
+
+        statusMessage.textContent = 'Profile updated successfully.';
+      } catch (err) {
+        console.error('Profile update failed:', err);
+        statusMessage.textContent = 'Profile update failed.';
+      }
     });
+
+    loadProfile();
   </script>
 </body>
 </html>
