@@ -16,6 +16,7 @@
     <label>Profile Picture: <input type="file" name="picture" accept="image/*" required /></label><br />
     <button type="submit">Submit</button>
   </form>
+  <button onclick="window.location.href='confirm-profile.html'">Confirm Account</button>
   <div id="status-message"></div>
 
   <script type="module">
@@ -47,13 +48,9 @@
         await createProfileWithImage(form, email);
 
         statusMessage.textContent = 'Profile created successfully. Redirecting...';
-setTimeout(() => {
-  window.location.href = 'confirm-profile.html';
-}, 1500);
-
-        // Optionally, you can also add the profile to your database here
-        
-
+        setTimeout(() => {
+          window.location.href = 'carousel.html';
+        }, 1500);
       } catch (error) {
         console.error('Signup or profile creation failed:', error);
         statusMessage.textContent = `Error: ${error.message}`;
