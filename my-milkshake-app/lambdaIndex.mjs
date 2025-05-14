@@ -72,9 +72,10 @@ export const handler = async (event) => {
           id: { S: id },
           name: { S: name },
           favoriteThing: { S: favoriteThing },
-          filename: { S: filename },
+          picture: { S: imageUrl },
           email: { S: email }
         }
+        
       };
       await dynamoDBClient.send(new PutItemCommand(dbParams));
       return successResponse("Profile created successfully!", null, 201);
