@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Account</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Confirm Your Account</h1>
+  <form id="confirm-form">
+    <label>Email: <input type="email" name="email" required /></label><br />
+    <label>Verification Code: <input type="text" name="code" required /></label><br />
+    <button type="submit">Confirm</button>
+  </form>
+  <div id="status-message"></div>
+
+  <script type="module">
+    import { Auth } from 'aws-amplify';
+    import awsExports from './aws-exports.js';
+    import { Amplify } from 'aws-amplify';
+
+    Amplify.configure(awsExports);
+
+    const form = document.getElementById('confirm-form');
+    const statusMessage = document.getElementById('status-message');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = form.email.value;
+      const code = form.code.value;
+
+      try {
+        await Auth.confirmSignUp(email, code);
+        statusMessage.textContent = 'Account confirmed. You can now sign in.';
+        setTimeout(() => {
+          window.location.href = 'signin.html';
+        }, 1500);
+      } catch (error) {
+        console.error('Confirmation failed:', error);
+        statusMessage.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
+

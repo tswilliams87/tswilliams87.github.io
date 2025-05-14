@@ -16,7 +16,10 @@ export default defineConfig({
         home: 'src/home.html',
         profile: 'src/profile.html',
         editProfile: 'src/edit-profile.html',
-        styles: 'src/styles.css'
+        styles: 'src/styles.css',
+        signin: 'src/signin.html',
+        confirmProfile: 'src/confirm-profile.html',
+        changePassword: 'src/change-password.html'
       },
     },
   },

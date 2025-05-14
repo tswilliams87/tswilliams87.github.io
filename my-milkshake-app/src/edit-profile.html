@@ -7,37 +7,100 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="edit-profile-container">
-    <h1>Edit Your Profile</h1>
-    <form id="edit-profile-form">
-      <input type="text" name="name" id="name" placeholder="Enter Name" required />
-      <input type="file" name="picture" id="picture" accept="image/*" />
-      <button type="submit">Save Changes</button>
-    </form>
+  <h1>Edit Your Profile</h1>
+  <button onclick="window.location.href='confirm-profile.html'">Confirm Account</button>
+  <div>
+    <label>Name: <input type="text" id="name" /></label>
+    <button id="update-name">Update Name</button>
   </div>
 
-  <script>
-    const profile = JSON.parse(localStorage.getItem('profile'));
+  <div>
+    <label>Favorite Thing: <input type="text" id="favoriteThing" /></label>
+    <button id="update-favorite">Update Favorite</button>
+  </div>
 
-    // Pre-fill the form with existing profile data
-    if (profile) {
-      document.getElementById('name').value = profile.name;
+  <div>
+    <label>Profile Picture: <input type="file" id="picture" accept="image/*" /></label>
+    <button id="update-picture">Update Picture</button>
+  </div>
+
+  <div id="status-message"></div>
+
+  <script type="module">
+    import { Auth, Storage } from 'aws-amplify';
+    import awsExports from './aws-exports.js';
+    import { Amplify } from 'aws-amplify';
+
+    Amplify.configure(awsExports);
+
+    let userId = '';
+    const nameInput = document.getElementById('name');
+    const favoriteInput = document.getElementById('favoriteThing');
+    const pictureInput = document.getElementById('picture');
+    const statusMessage = document.getElementById('status-message');
+
+    document.getElementById('update-name').addEventListener('click', () => updateField('name', nameInput.value));
+    document.getElementById('update-favorite').addEventListener('click', () => updateField('favoriteThing', favoriteInput.value));
+    document.getElementById('update-picture').addEventListener('click', updatePicture);
+
+    async function loadProfile() {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        userId = user.attributes.sub;
+        const response = await fetch(`https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles/user/${encodeURIComponent(userId)}`);
+
+        const data = await response.json();
+
+        nameInput.value = data.name;
+        favoriteInput.value = data.favoriteThing;
+      } catch (error) {
+        console.error('Failed to load profile:', error);
+        statusMessage.textContent = 'Error loading profile.';
+      }
     }
 
-    document.getElementById('edit-profile-form').addEventListener('submit', (event) => {
-      event.preventDefault();
+    async function updateField(field, value) {
+      try {
+        const payload = { id: userId };
+        payload[field] = value;
 
-      const name = event.target.name.value;
-      const pictureInput = event.target.picture.files[0];
-      const picture = pictureInput ? URL.createObjectURL(pictureInput) : profile.picture;
+        const response = await fetch(`https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles/user/${encodeURIComponent(userId)}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        });
 
-      // Update the profile in localStorage
-      const updatedProfile = { name, picture };
-      localStorage.setItem('profile', JSON.stringify(updatedProfile));
+        if (!response.ok) throw new Error('Update failed');
 
-      // Redirect back to carousel
-      window.location.href = 'carousel.html';
-    });
+        statusMessage.textContent = `${field} updated successfully.`;
+      } catch (err) {
+        console.error(`Failed to update ${field}:`, err);
+        statusMessage.textContent = `Failed to update ${field}.`;
+      }
+    }
+
+    async function updatePicture() {
+      const file = pictureInput.files[0];
+      if (!file) return;
+
+      const filename = `${Date.now()}_${file.name}`;
+
+      try {
+        await Storage.put(`profiles/${filename}`, file, {
+          level: 'public',
+          contentType: file.type
+        });
+
+        await updateField('filename', filename);
+      } catch (err) {
+        console.error('Failed to update picture:', err);
+        statusMessage.textContent = 'Failed to update picture.';
+      }
+    }
+
+    loadProfile();
   </script>
 </body>
 </html>
