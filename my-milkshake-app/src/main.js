@@ -38,7 +38,7 @@ export async function createProfileWithImage(form, id, email) {
   const payload = {
     id, // Cognito sub
     email,
-    name,picture,
+    name,
     favoriteThing,
     filename
   };
