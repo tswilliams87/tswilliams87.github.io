@@ -82,7 +82,7 @@ export const handler = async (event) => {
       return successResponse("Profile created successfully!", null, 201);
     }
 
-    if (method === "PUT" && path === "/profiles") {
+    if (method === "PUT" && path === "/profiles/user/") {
       if (!event.body) return errorResponse("Missing request body", 400);
       const { id, name, favoriteThing, filename, email } = JSON.parse(event.body);
       if (!id) return errorResponse("ID is required", 400);
