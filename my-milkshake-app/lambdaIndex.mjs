@@ -1,7 +1,10 @@
+// lambdaIndex.mjs — Updated to use Cognito sub as id and store email
 import {
   DynamoDBClient,
   PutItemCommand,
-  ScanCommand
+  ScanCommand,
+  GetItemCommand,
+  UpdateItemCommand
 } from "@aws-sdk/client-dynamodb";
 import { S3Client } from "@aws-sdk/client-s3";
 
@@ -26,76 +29,100 @@ export const handler = async (event) => {
     const method = event.httpMethod || "POST";
     const path = event.resource || "/profiles";
 
-    // GET all profiles
     if (method === "GET" && path === "/profiles") {
       const command = new ScanCommand({ TableName: TABLE_NAME });
       const data = await dynamoDBClient.send(command);
       return successResponse("Profiles retrieved successfully!", data.Items);
     }
 
-    // GET latest ID
     if (method === "GET" && path === "/profiles/latest-id") {
       const command = new ScanCommand({ TableName: TABLE_NAME });
       const data = await dynamoDBClient.send(command);
       return successResponse("Latest profile retrieved successfully!", data.Items);
     }
 
-    // POST: Create new profile (image already uploaded from frontend)
+    if (method === "GET" && path === "/profiles/{id}" && event.pathParameters?.id) {
+      const id = decodeURIComponent(event.pathParameters.id);
+      const result = await dynamoDBClient.send(new GetItemCommand({
+        TableName: TABLE_NAME,
+        Key: { id: { S: id } }
+      }));
+      if (!result.Item) return errorResponse("Profile not found", 404);
+      const profile = {
+        id: result.Item.id.S,
+        name: result.Item.name?.S || '',
+        favoriteThing: result.Item.favoriteThing?.S || '',
+        filename: result.Item.filename?.S || '',
+        email: result.Item.email?.S || ''
+      };
+      return successResponse("Profile retrieved", profile);
+    }
+
     if (method === "POST" && path === "/profiles") {
       if (!event.body) return errorResponse("Missing request body", 400);
-
       const body = JSON.parse(event.body);
-      console.log("Parsed body:", body);
-
-      const { id, name, favoriteThing, filename } = body;
-
-      if (!id || !name || !favoriteThing || !filename) {
+      const { id, name, favoriteThing, filename, email } = body;
+      if (!id || !name || !favoriteThing || !filename || !email) {
         return errorResponse("Missing required fields", 400);
       }
-
-      const imageUrl = `profiles/${filename}`; // store key only
-      console.log("Image URL:", imageUrl);
-
+      const imageUrl = `profiles/${filename}`;
       const dbParams = {
         TableName: TABLE_NAME,
         Item: {
           id: { S: id },
           name: { S: name },
           favoriteThing: { S: favoriteThing },
-          picture: { S: imageUrl }
-
+          filename: { S: filename },
+          email: { S: email }
         }
       };
-
       await dynamoDBClient.send(new PutItemCommand(dbParams));
       return successResponse("Profile created successfully!", null, 201);
     }
 
-    // PUT: Update profile
-    if (method === "PUT" && path === "/profiles/latest-id") {
+    if (method === "PUT" && path === "/profiles") {
       if (!event.body) return errorResponse("Missing request body", 400);
+      const { id, name, favoriteThing, filename, email } = JSON.parse(event.body);
+      if (!id) return errorResponse("ID is required", 400);
 
-      const { id, name, favoriteThing, picture } = JSON.parse(event.body);
+      const updateExpr = [];
+      const names = {};
+      const values = {};
 
-      if (!id || !name || !favoriteThing || !picture) {
-        return errorResponse("Missing fields for update", 400);
+      if (name) {
+        updateExpr.push("#n = :n");
+        names["#n"] = "name";
+        values[":n"] = { S: name };
+      }
+      if (favoriteThing) {
+        updateExpr.push("#f = :f");
+        names["#f"] = "favoriteThing";
+        values[":f"] = { S: favoriteThing };
+      }
+      if (filename) {
+        updateExpr.push("#p = :p");
+        names["#p"] = "filename";
+        values[":p"] = { S: filename };
+      }
+      if (email) {
+        updateExpr.push("#e = :e");
+        names["#e"] = "email";
+        values[":e"] = { S: email };
       }
 
-      const updateParams = {
-        TableName: TABLE_NAME,
-        Item: {
-          id: { S: id },
-          name: { S: name },
-          favoriteThing: { S: favoriteThing },
-          picture: { S: imageUrl }
-        }
-      };
+      if (updateExpr.length === 0) return errorResponse("No updatable fields provided", 400);
 
-      await dynamoDBClient.send(new PutItemCommand(updateParams));
-      return successResponse("Profile updated successfully!");
+      await dynamoDBClient.send(new UpdateItemCommand({
+        TableName: TABLE_NAME,
+        Key: { id: { S: id } },
+        UpdateExpression: "SET " + updateExpr.join(", "),
+        ExpressionAttributeNames: names,
+        ExpressionAttributeValues: values
+      }));
+
+      return successResponse("Profile updated");
     }
 
-    // Default 404
     return errorResponse("Resource not found", 404);
   } catch (error) {
     console.error("Error caught in handler:", error);
@@ -115,7 +142,7 @@ function successResponse(message, data = null, code = 200) {
   return {
     statusCode: code,
     headers: defaultHeaders(),
-    body: JSON.stringify({ message, data })
+    body: JSON.stringify(data ? data : { message })
   };
 }
 
