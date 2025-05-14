@@ -4,6 +4,9 @@ import {
   ScanCommand
 } from "@aws-sdk/client-dynamodb";
 import { S3Client } from "@aws-sdk/client-s3";
+import AWS from 'aws-sdk';
+
+
 
 const REGION = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME;
@@ -11,6 +14,15 @@ const BUCKET_NAME = "milkshakeproddevs3071b7-dev";
 
 const dynamoDBClient = new DynamoDBClient({ region: REGION });
 const s3Client = new S3Client({ region: REGION });
+const dynamo = new AWS.DynamoDB.DocumentClient();
+
+
+
+
+
+
+
+
 
 export const handler = async (event) => {
   console.log("=== Incoming Request ===");
@@ -25,7 +37,65 @@ export const handler = async (event) => {
   try {
     const method = event.httpMethod || "POST";
     const path = event.resource || "/profiles";
-
+// link profile to email and cognito user
+    const headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+      "Access-Control-Allow-Headers": "Content-Type"
+    };
+    // CORS preflight request
+    if (event.httpMethod === "OPTIONS") {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ message: "CORS preflight response" })
+      };
+    }
+    if (event.httpMethod === 'GET' && event.resource === '/profiles/{email}') {
+      const email = decodeURIComponent(event.pathParameters.email);
+    
+      try {
+        const result = await dynamo.get({
+          TableName: TABLE_NAME,
+          Key: { email }
+        }).promise();
+    
+        if (!result.Item) {
+          return {
+            statusCode: 404,
+            headers,
+            body: JSON.stringify({ error: 'Profile not found' }),
+          };
+        }
+    
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify(result.Item),
+        };
+      } catch (err) {
+        console.error('DynamoDB error:', err);
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: 'Could not retrieve profile' }),
+        };
+      }
+    }
+    
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ error: 'Unsupported operation' }),
+    };
+    
+    
+    
+    
+    
+    
+    
     // GET all profiles
     if (method === "GET" && path === "/profiles") {
       const command = new ScanCommand({ TableName: TABLE_NAME });
