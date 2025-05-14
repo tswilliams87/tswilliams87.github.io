@@ -7,7 +7,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 
 const REGION = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME;
-const BUCKET_NAME = "milkshake-user-images15895-dev";
+const BUCKET_NAME = "milkshakeproddevs3071b7-dev";
 
 const dynamoDBClient = new DynamoDBClient({ region: REGION });
 const s3Client = new S3Client({ region: REGION });
