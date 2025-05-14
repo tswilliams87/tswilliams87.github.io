@@ -3,55 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milkshake</title>
+  <title>Milkshake App</title>
   <link rel="stylesheet" href="/styles.css">
-  <style>
-    .navbar {
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       padding: 10px 20px;
-       background-color: #f8f9fa;
-       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-       position: fixed;
-       top: 0;
-       left: 0;
-       width: 100%;
-       z-index: 1000;
-     }
- 
-     .navbar a {
-       margin: 0 15px;
-       text-decoration: none;
-       color: #007bff;
-       font-weight: bold;
-       -webkit-transition: color 0.3s ease;
-       transition: color 0.3s ease;
-     }
- 
-     .navbar a:hover {
-       text-decoration: underline;
-     }
-     </style>
 </head>
 <body>
-  <div class="landing-container">
-    <h1>Welcome to Milkshake that brings all the boys to the yard</h1>
-    <div class="landing-options">
-      <button id="create-profile-btn">Create Profile</button>
-      <button id="continue-guest-btn">Head to the Yard</button>
-    </div>
+  <div class="container">
+    <h1>Welcome to Milkshake</h1>
+    <button onclick="window.location.href='create-profile.html'">Create Profile</button>
+    <button onclick="window.location.href='signin.html'">Sign In</button>
+    <button onclick="window.location.href='guest.html'">Continue as Guest</button>
   </div>
 
-  <script>
-    document.getElementById('create-profile-btn').addEventListener('click', () => {
-      window.location.href = '/create-profile.html';
-    });
+  <script type="module">
+    import { Auth } from 'aws-amplify';
+    import awsExports from './aws-exports.js';
+    import { Amplify } from 'aws-amplify';
 
-    document.getElementById('continue-guest-btn').addEventListener('click', () => {
-      // Navigate directly to the carousel page
-      window.location.href = '/carousel.html';
-    });
+    Amplify.configure(awsExports);
+
+    Auth.currentAuthenticatedUser()
+      .then(user => {
+        console.log('User session:', user);
+        // Optionally redirect to carousel or dashboard if already signed in
+      })
+      .catch(() => {
+        console.log('No active session.');
+      });
   </script>
 </body>
 </html>
