@@ -98,6 +98,7 @@
       background-color: green;
       color: white;
     }
+ 
   </style>
 </head>
 <body>
@@ -106,6 +107,8 @@
     <a href="carousel.html">Carousel</a>
     <a href="create-profile.html">Create Profile</a>
     <a href="edit-profile.html">Profile</a>
+    <button id="signout-btn">Sign Out</button>
+
   </div>
 
   <div class="carousel-container">
@@ -226,6 +229,16 @@ yesBtn.addEventListener('click', () => swipe('yes'));
 reloadBtn.addEventListener('click', loadProfiles);
 
 loadProfiles();
+import { Auth } from 'aws-amplify';
+
+document.getElementById('signout-btn')?.addEventListener('click', async () => {
+  try {
+    await Auth.signOut();
+    window.location.href = 'signin.html';
+  } catch (error) {
+    console.error('Sign out failed:', error);
+  }
+});
 
   </script>
 </body>
