@@ -138,7 +138,7 @@ let currentIndex = 0;
 
 async function loadProfiles() {
   try {
-    const response = await fetchProfiles();
+    const response = await fetchOneProfile();
     profiles = response?.data || [];
     currentIndex = 0;
     await updateCarousel();
