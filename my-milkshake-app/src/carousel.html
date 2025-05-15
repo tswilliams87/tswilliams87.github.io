@@ -143,8 +143,12 @@ async function loadProfiles() {
     currentIndex = 0;
     await updateCarousel();
     reloadBtn.style.display = 'none';
+    console.log('Loaded profiles:', profiles);
+
   } catch (error) {
     console.error('Failed to fetch profiles:', error);
+    console.log('Loaded profiles:', profiles);
+
     profiles = [];
     carousel.innerHTML = '<p>Error loading profiles</p>';
     reloadBtn.style.display = 'block';
