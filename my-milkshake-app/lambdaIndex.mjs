@@ -61,8 +61,8 @@ export const handler = async (event) => {
     if (method === "POST" && path === "/profiles") {
       if (!event.body) return errorResponse("Missing request body", 400);
       const body = JSON.parse(event.body);
-      const { id, name, favoriteThing, filename, email } = body;
-      if (!id || !name || !favoriteThing || !filename || !email) {
+      const { id, name, favoriteThing, filename, email, picture } = body;
+      if (!id || !name || !favoriteThing || !filename || !email || !picture) {
         return errorResponse("Missing required fields", 400);
       }
       const dbParams = {
@@ -72,7 +72,8 @@ export const handler = async (event) => {
           name: { S: name },
           favoriteThing: { S: favoriteThing },
           filename: { S: filename },
-          email: { S: email }
+          email: { S: email },
+          picture: {S: picture}
         }
       };
       await dynamoDBClient.send(new PutItemCommand(dbParams));
