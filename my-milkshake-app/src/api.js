@@ -99,6 +99,7 @@ export async function fetchProfiles() {
 }
 export async function fetchOneProfile() {
     try {
+        // might need something like this  as a variable to build the uri fetch(`https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles/user/${encodeURIComponent(userId)}`
         const response = await fetch(`${API_BASE_URL}/user/`,{
             method: 'GET',
         });
