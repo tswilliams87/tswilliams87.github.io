@@ -163,7 +163,7 @@ async function createCard(profile) {
  // might need to flip this to filename linking it to the lamnda data that get returned. 
  // also did something wonky with those || `${profile.filename?.S || ''}`;
 
-  const s3Key = profile.picture?.S || `${profile.filename?.S || ''}`;
+  const s3Key = profile.picture?.S || profile.filename?.S
 
   const card = document.createElement('div');
   card.className = 'card';
