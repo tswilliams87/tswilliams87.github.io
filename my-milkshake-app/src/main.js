@@ -23,6 +23,7 @@ export async function createProfileWithImage(form, id, email) {
   }
 
   const filename = `${Date.now()}_${file.name}`;
+  const picture = `profiles/${filename}`;
 
   try {
     await Storage.put(`profiles/${filename}`, file, {
@@ -35,12 +36,14 @@ export async function createProfileWithImage(form, id, email) {
     throw new Error("Failed to upload image to S3.");
   }
 
+
   const payload = {
     id, // Cognito sub
     email,
     name,
     favoriteThing,
-    filename
+    filename,
+    picture
   };
 
   const response = await fetch('https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles', {

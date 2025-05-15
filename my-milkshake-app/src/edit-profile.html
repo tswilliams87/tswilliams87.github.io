@@ -86,7 +86,7 @@
       if (!file) return;
 
       const filename = `${Date.now()}_${file.name}`;
-
+      const picture = `profiles/${filename}`;
       try {
         await Storage.put(`profiles/${filename}`, file, {
           level: 'public',

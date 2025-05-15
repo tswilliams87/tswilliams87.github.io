@@ -53,7 +53,8 @@ export const handler = async (event) => {
         name: result.Item.name?.S || '',
         favoriteThing: result.Item.favoriteThing?.S || '',
         filename: result.Item.filename?.S || '',
-        email: result.Item.email?.S || ''
+        email: result.Item.email?.S || '',
+        picture: result.Item.picture?.S || ''
       };
       return successResponse("Profile retrieved", profile);
     }
@@ -61,8 +62,8 @@ export const handler = async (event) => {
     if (method === "POST" && path === "/profiles") {
       if (!event.body) return errorResponse("Missing request body", 400);
       const body = JSON.parse(event.body);
-      const { id, name, favoriteThing, filename, email } = body;
-      if (!id || !name || !favoriteThing || !filename || !email) {
+      const { id, name, favoriteThing, filename, email, picture } = body;
+      if (!id || !name || !favoriteThing || !filename || !email || !picture) {
         return errorResponse("Missing required fields", 400);
       }
       const dbParams = {
@@ -72,7 +73,8 @@ export const handler = async (event) => {
           name: { S: name },
           favoriteThing: { S: favoriteThing },
           filename: { S: filename },
-          email: { S: email }
+          email: { S: email },
+          picture: {S: picture}
         }
       };
       await dynamoDBClient.send(new PutItemCommand(dbParams));
@@ -82,7 +84,7 @@ export const handler = async (event) => {
     if (method === "PUT" && path.startsWith("/profiles/user/")) {
       if (!event.body) return errorResponse("Missing request body", 400);
       const id = decodeURIComponent(path.split("/").pop());
-      const { name, favoriteThing, filename, email } = JSON.parse(event.body);
+      const { name, favoriteThing, filename, email, picture } = JSON.parse(event.body);
 
       const updateExpr = [];
       const names = {};
@@ -98,15 +100,20 @@ export const handler = async (event) => {
         names["#f"] = "favoriteThing";
         values[":f"] = { S: favoriteThing };
       }
-      if (filename) {
+      if (picture) {
         updateExpr.push("#p = :p");
-        names["#p"] = "filename";
-        values[":p"] = { S: filename };
+        names["#p"] = "picture";
+        values[":p"] = { S: picture };
       }
       if (email) {
         updateExpr.push("#e = :e");
         names["#e"] = "email";
         values[":e"] = { S: email };
+      }
+      if (filename) {
+        updateExpr.push("#fn = :fn");
+        names["#fn"] = "filename";
+        values[":fn"] = { S: filename };
       }
 
       if (updateExpr.length === 0) return errorResponse("No updatable fields provided", 400);
