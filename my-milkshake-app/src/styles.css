@@ -18,6 +18,16 @@ body {
     width: 100%;
     z-index: 1000;
   }
+  .navbar .nav-link {
+    background: none;
+    border: none;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    font: inherit;
+  }
+  
   
   .navbar a {
     margin: 0 15px;
