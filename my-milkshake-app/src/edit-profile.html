@@ -7,6 +7,14 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="carousel.html">Carousel</a>
+    <a href="confirm-profile.html">Verify Email</a>
+    <a href="change-password.html">Change Password</a>
+    <button id="signout-btn">Sign Out</button>
+
+  </div>
   <h1>Edit Your Profile</h1>
   <button onclick="window.location.href='confirm-profile.html'">Confirm Account</button>
   <div>
@@ -101,6 +109,14 @@
     }
 
     loadProfile();
+    document.getElementById('signout-btn')?.addEventListener('click', async () => {
+  try {
+    await Auth.signOut();
+    window.location.href = 'signin.html';
+  } catch (error) {
+    console.error('Sign out failed:', error);
+  }
+});
   </script>
 </body>
 </html>
