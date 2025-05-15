@@ -211,12 +211,6 @@ async function updateCarousel() {
   }
 }
 
-function showPopup(action) {
-  actionPopup.textContent = action === 'yes' ? 'Yes, please' : 'Nope';
-  actionPopup.className = `action-popup ${action}`;
-  actionPopup.style.display = 'block';
-  setTimeout(() => actionPopup.style.display = 'none', 1000);
-}
 
 function swipe(action) {
   showPopup(action);
