@@ -5,11 +5,12 @@ body {
   }
   
   /* Navbar Styling */
-  .navbar .nav-link {
+  .navbar {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px 20px;
+    gap: 20px;
+    padding: 10px 0;
     background-color: #f8f9fa;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed;
@@ -20,6 +21,7 @@ body {
   }
   
   
+  
   .navbar a {
     margin: 0 15px;
     text-decoration: none;
@@ -27,6 +29,23 @@ body {
     font-weight: bold;
     transition: color 0.3s ease;
   }
+  .navbar button.nav-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar button.nav-link:hover {
+    text-decoration: underline;
+  }
+  
   
   .navbar a:hover {
     text-decoration: underline;
@@ -34,8 +53,16 @@ body {
   
   /* Carousel Styling */
   .carousel-container {
-    padding-top: 20px; /* ensures spacing below navbar */
+    padding-top: 80px; /* to clear fixed navbar */
     padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .carousel {
+    display: flex;
+    justify-content: center;
   }
   
   
