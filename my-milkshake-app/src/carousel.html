@@ -139,14 +139,18 @@ let currentIndex = 0;
 async function loadProfiles() {
   try {
     const response = await fetchProfiles();
-    profiles = response.data;
+    profiles = response?.data || [];
     currentIndex = 0;
-    await updateCarousel(); // Await the async function
+    await updateCarousel();
     reloadBtn.style.display = 'none';
   } catch (error) {
     console.error('Failed to fetch profiles:', error);
+    profiles = [];
+    carousel.innerHTML = '<p>Error loading profiles</p>';
+    reloadBtn.style.display = 'block';
   }
 }
+
 
 async function createCard(profile) {
   const name = profile.name?.S || 'Unknown';
