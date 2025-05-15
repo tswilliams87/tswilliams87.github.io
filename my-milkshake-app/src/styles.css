@@ -51,8 +51,8 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    width: 300px;
-    height: 80vh;
+    width: 80vh; /* Set width of picture Viewheight to 80vh */
+    height: 80vh;/* Set width of picture Viewheight to 80vh */
     margin: 0 auto;
     background-color: #fff;
     padding: 5% 0; /* 5% top and bottom padding */
