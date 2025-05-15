@@ -74,8 +74,8 @@ export async function getAllProfiles() {
         if (!response.ok) {
             throw new Error(`Failed to fetch profiles. Status: ${response.status}`);
         }
-
-        return await response.json();
+        const profiles = await response.json();
+        return profiles;
     } catch (error) {
         console.error('Error fetching profiles:', error);
         throw error;
@@ -99,14 +99,15 @@ export async function fetchProfiles() {
 }
 export async function fetchOneProfile() {
     try {
-        const response = await fetch(`${API_BASE_URL}/user/`,{
+        // might need something like this  as a variable to build the uri fetch(`https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles/user/${encodeURIComponent(userId)}`
+        const response = await fetch(`${API_BASE_URL}/user/${encodeURIComponent(userId)}`,{
             method: 'GET',
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const profiles = await response.json();
-        return profiles;
+        const profile = await response.json();
+        return profile;
     } catch (error) {
         console.error('Error fetching profiles:', error);
         throw error;
