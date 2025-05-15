@@ -150,25 +150,23 @@ async function loadProfiles() {
 
 async function createCard(profile) {
   const name = profile.name?.S || 'Unknown';
-  const s3Key = profile.filename?.S || null;
   const favoriteThing = profile.favoriteThing?.S || 'Not specified';
-  const picture = profile.picture?.S || null;
-  const filename = profile.filename?.S || null;
+  const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
 
   const card = document.createElement('div');
   card.className = 'card';
 
   const img = document.createElement('img');
-  if (s3Key) {
+  if (s3Key && s3Key !== 'profiles/') {
     try {
       const result = await Storage.get(s3Key, { level: 'public' });
       img.src = result;
     } catch (error) {
-      console.error('Image fetch failed:', error);
-      img.src = 'https://images.app.goo.gl/gKtyk4evSpB3by7m8';
+      console.error('Image fetch failed for key:', s3Key, error);
+      img.src = 'https://via.placeholder.com/300x400';
     }
   } else {
-    img.src = 'https://images.app.goo.gl/gKtyk4evSpB3by7m8';
+    img.src = 'https://via.placeholder.com/300x400';
   }
   img.alt = name;
 
