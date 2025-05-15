@@ -139,7 +139,8 @@ let currentIndex = 0;
 async function loadProfiles() {
   try {
     const response = await fetchProfiles();
-    profiles = response?.data || [];
+    profiles = response || [];
+
     currentIndex = 0;
     await updateCarousel();
     reloadBtn.style.display = 'none';

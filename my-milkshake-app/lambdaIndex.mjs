@@ -32,7 +32,12 @@ export const handler = async (event) => {
     if (method === "GET" && path === "/profiles") {
       const command = new ScanCommand({ TableName: TABLE_NAME });
       const data = await dynamoDBClient.send(command);
-      return successResponse("Profiles retrieved successfully!", data.Items);
+      return {
+        statusCode: 200,
+        headers: defaultHeaders(),
+        body: JSON.stringify(data.Items)
+      };
+      
     }
 
     if (method === "GET" && path === "/profiles/latest-id") {
