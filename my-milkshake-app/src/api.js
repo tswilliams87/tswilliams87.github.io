@@ -105,8 +105,8 @@ export async function fetchOneProfile() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const profiles = await response.json();
-        return profiles;
+        const profile = await response.json();
+        return profile;
     } catch (error) {
         console.error('Error fetching profiles:', error);
         throw error;
