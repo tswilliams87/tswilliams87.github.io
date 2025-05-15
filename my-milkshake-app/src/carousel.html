@@ -138,7 +138,7 @@ let currentIndex = 0;
 
 async function loadProfiles() {
   try {
-    const response = await fetchOneProfile();
+    const response = await fetchProfiles();
     profile = response.data;
     currentIndex = 0;
     await updateCarousel(); // Await the async function
@@ -150,7 +150,7 @@ async function loadProfiles() {
 
 async function createCard(profile) {
   const name = profile.name?.S || 'Unknown';
-  const s3Key = profile.picture?.S || 'missing'
+  const s3Key = profile.filename?.S || null;
   const favoriteThing = profile.favoriteThing?.S || 'Not specified';
 
   const card = document.createElement('div');
