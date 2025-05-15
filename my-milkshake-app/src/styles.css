@@ -243,11 +243,11 @@ body {
   }
 
   .swipe-button.nope {
-    background-color: red;
+    background-color: rgb(0, 8, 255);
     color: white;
   }
 
   .swipe-button.yes {
-    background-color: green;
+    background-color: rgb(17, 218, 138);
     color: white;
   }
