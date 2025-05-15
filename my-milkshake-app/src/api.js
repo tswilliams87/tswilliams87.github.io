@@ -74,8 +74,8 @@ export async function getAllProfiles() {
         if (!response.ok) {
             throw new Error(`Failed to fetch profiles. Status: ${response.status}`);
         }
-
-        return await response.json();
+        const profiles = await response.json();
+        return profiles;
     } catch (error) {
         console.error('Error fetching profiles:', error);
         throw error;
