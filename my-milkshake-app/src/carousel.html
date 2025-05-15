@@ -138,7 +138,7 @@ let currentIndex = 0;
 
 async function loadProfiles() {
   try {
-    const response = await fetchOneProfile();
+    const response = await fetchProfiles();
     profiles = response?.data || [];
     currentIndex = 0;
     await updateCarousel();
@@ -161,6 +161,8 @@ async function createCard(profile) {
   const favoriteThing = profile.favoriteThing?.S || 'Not specified';
  
  // might need to flip this to filename linking it to the lamnda data that get returned. 
+ // also did something wonky with those || `${profile.filename?.S || ''}`;
+
   const s3Key = profile.picture?.S || `${profile.filename?.S || ''}`;
 
   const card = document.createElement('div');
