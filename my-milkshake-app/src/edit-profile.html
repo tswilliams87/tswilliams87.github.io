@@ -15,7 +15,10 @@
     <button id="signout-btn">Sign Out</button>
 
   </div>
-  <h1>Edit Your Profile</h1>
+  <div class="welcome-container">
+    <h1>Welcome to Your Profile</h1>
+    <p>Here you can edit your profile information.</p>
+  </div>
   <button onclick="window.location.href='confirm-profile.html'">Confirm Account</button>
   <div>
     <label>Name: <input type="text" id="name" /></label>
@@ -23,8 +26,8 @@
   </div>
 
   <div>
-    <label>Favorite Thing: <input type="text" id="favoriteThing" /></label>
-    <button id="update-favorite">Update Favorite</button>
+    <label>Favorite Quote: <input type="text" id="favoriteThing" /></label>
+    <button id="update-favorite">Update Favorite Quote</button>
   </div>
 
   <div>
@@ -112,7 +115,7 @@
     document.getElementById('signout-btn')?.addEventListener('click', async () => {
   try {
     await Auth.signOut();
-    window.location.href = 'signin.html';
+    window.location.href = 'index.html';
   } catch (error) {
     console.error('Sign out failed:', error);
   }
