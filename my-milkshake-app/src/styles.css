@@ -1,268 +1,77 @@
 /* General Reset */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Navbar Styling */
-  .navbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 10px 0;
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-  }
-  
-  
-  
-  .navbar a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-    transition: color 0.3s ease;
-  }
-  .navbar button.nav-link {
-    background: none;
-    border: none;
-    color: #007bff;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0;
-    margin: 0 15px;
-    transition: color 0.3s ease;
-  }
-  
-  .navbar button.nav-link:hover {
-    text-decoration: underline;
-  }
-  
-  
-  .navbar a:hover {
-    text-decoration: underline;
-  }
-  
-  /* Carousel Styling */
-  .carousel-container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 60px; /* navbar height */
-    padding-bottom: 80px; /* room for buttons */
-    box-sizing: border-box;
-  }
-  
-  
-  
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
 
-  .carousel {
-    display: flex;
-    justify-content: center;
-  }
-  
-  
-  .card {
-    flex: 1;
-    width: 90vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    margin: 0;
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  .card img {
-    max-height: 70%;
-    max-width: 100%;
-    object-fit: contain;
-    flex-grow: 1;
-  }
-  
-  
-  .card h2,
-  .card p {
-    margin: 2px 0;
-    font-size: 1.1rem;
-  }
-  
-  
-  
-  .popup {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 18px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-  }
-  
-  .popup.show {
-    opacity: 1;
-  }
-  
-  /* Create Profile Styling */
-  .create-profile-container {
-    margin: 50px auto;
-    max-width: 400px;
-    text-align: center;
-  }
-  
-  .create-profile-container h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .create-profile-container input {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
-  
-  .create-profile-container button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .create-profile-container button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Profile Page Styling */
-  .profile-container {
-    text-align: center;
-    margin-top: 50px;
-  }
-  
-  .profile-container img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-  }
-  
-  .profile-container h2 {
-    font-size: 24px;
-    margin-top: 20px;
-  }
-  
-  /* Welcome Page Styling */
-  .welcome-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-  }
-  
-  .welcome-container h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-  }
-  
-  .welcome-container p {
-    font-size: 18px;
-  }
-  
-  .welcome-container a {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .welcome-container a:hover {
-    background-color: #0056b3;
-  }
+/* Navbar Styling */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 10px 0;
+}
 
+.navbar a, .navbar button.nav-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
 
-  .action-popup {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: none;
-  }
+/* Fullscreen Profile Layout */
+.profile-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
 
-  .action-popup.nope {
-    background-color: red;
-  }
+#profile-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+}
 
-  .action-popup.yes {
-    background-color: green;
-  }
+/* Swipe Zones */
+.swipe-zone {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 10;
+}
 
-  .reload-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
+.left {
+  left: 0;
+}
 
-  .swipe-buttons {
-    position: fixed;
-    bottom: 10px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    z-index: 1000;
-  }
-  
-  
+.right {
+  right: 0;
+}
 
-  .swipe-button.nope {
-    background-color: rgb(0, 8, 255);
-    color: white;
-  }
-
-  .swipe-button.yes {
-    background-color: rgb(17, 218, 138);
-    color: white;
-  }
+/* Overlay Text */
+.overlay-text {
+  position: absolute;
+  bottom: 10%;
+  left: 20px;
+  color: white;
+  text-shadow: 0 0 5px black;
+  z-index: 2;
+}
