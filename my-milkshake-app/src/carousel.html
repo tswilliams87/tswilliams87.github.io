@@ -111,7 +111,7 @@
         const response = await fetchProfiles();
         profiles = response || [];
         currentIndex = 0;
-       // showProfile();
+       showProfile();
       } catch (error) {
         console.error('Failed to load profiles:', error);
       }
