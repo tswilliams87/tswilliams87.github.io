@@ -18,12 +18,15 @@
     <label>Name: <input type="text" name="name" required /></label><br />
     <label>Favorite Thing: <input type="text" name="favoriteThing" required /></label><br />
     <label>Profile Picture: <input type="file" name="picture" accept="image/*" required /></label><br />
-    <button type="submit">Submit</button>
+       <button type="submit">Submit</button>
   </form>
+
+    
   <button onclick="window.location.href='confirm-profile.html'">Confirm Account</button>
+
   <div id="status-message"></div>
 
-  <script type="module">
+  <script type="module" >
     import { Auth, Storage } from 'aws-amplify';
     import awsExports from './aws-exports.js';
     import { createProfileWithImage } from './main.js';
@@ -61,5 +64,7 @@
       }
     });
   </script>
+
+
 </body>
 </html>
