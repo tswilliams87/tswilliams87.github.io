@@ -5,16 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Profile</title>
   <link rel="stylesheet" href="/styles.css">
-  
+
   <style> 
 
-.welcome-container {
+.ProfileWelcome {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 10vh;
   text-align: center;
+}
+.StatusBar {
+
+  background-color: #007bff;
+  color: black;
+ 
 }
   </style>
 </head>
@@ -27,7 +33,7 @@
     <button id="signout-btn" class="nav-link">Sign Out</button>
 
   </div>
-  <div class="welcome-container">
+  <div class="ProfileWelcome">
     <h1>Welcome to Your Profile</h1>
   </div>
   
@@ -46,7 +52,7 @@
     <button id="update-picture">Update Picture</button>
   </div>
 
-  <div id="status-message"></div>
+  <div id="status-message" class="StatusBar"></div>
 
   <script type="module">
     import { Auth, Storage } from 'aws-amplify';
@@ -77,7 +83,7 @@
         favoriteInput.value = data.favoriteThing;
       } catch (error) {
         console.error('Failed to load profile:', error);
-        statusMessage.textContent = 'Error loading profile.';
+        statusMessage.textContent = 'No profile signed in.';
       }
     }
 
