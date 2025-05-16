@@ -111,19 +111,22 @@
         const response = await fetchProfiles();
         profiles = response || [];
         currentIndex = 0;
-        showProfile();
+       // showProfile();
       } catch (error) {
         console.error('Failed to load profiles:', error);
       }
     }
 
+
     async function showProfile() {
+     /*
       if (currentIndex >= profiles.length) {
         imgEl.src = 'https://via.placeholder.com/600x800';
         nameEl.textContent = 'No more profiles';
         favEl.textContent = '';
         return;
       }
+        */
 
       const profile = profiles[currentIndex];
       const name = profile.name?.S || 'Unknown';
@@ -144,7 +147,7 @@
 
     function swipe(direction) {
       console.log(`Swiped: ${direction}`);
-      currentIndex++;
+     // currentIndex++;
       showProfile();
     }
 
