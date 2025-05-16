@@ -119,14 +119,12 @@
 
 
     async function showProfile() {
-     /*
+     
       if (currentIndex >= profiles.length) {
-        imgEl.src = 'https://via.placeholder.com/600x800';
-        nameEl.textContent = 'No more profiles';
-        favEl.textContent = '';
+        window.location.href = 'carousel.html'
         return;
       }
-        */
+        
 
       const profile = profiles[currentIndex];
       const name = profile.name?.S || 'Unknown';
@@ -147,7 +145,7 @@
 
     function swipe(direction) {
       console.log(`Swiped: ${direction}`);
-     // currentIndex++;
+     currentIndex++;
       showProfile();
     }
 
