@@ -3,16 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milkshake App</title>
+  <title>SourBitches</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to Milkshake</h1>
-    <button onclick="window.location.href='create-profile.html'">Create Profile</button>
-    <button onclick="window.location.href='signin.html'">Sign In</button>
-    <button onclick="window.location.href='carousel.html'">Continue as Guest</button>
-  </div>
+
+    
+
+    <div class="welcome-container">
+      <h1>This Is Where Dough Gets Its Glow-Up.</h1>
+      
+      <a href="carousel.html">Enter the Yeast Side</a>
+    </div>
+    <div class="navbar">
+      <a href="create-profile.html">Create Profile</a>
+  
+     
+      <a href="signin.html">Sign-In</a>
+      <button id="signout-btn">Sign Out</button>
 
   <script type="module">
     import { Auth } from 'aws-amplify';
@@ -29,6 +37,15 @@
       .catch(() => {
         console.log('No active session.');
       });
+
+      document.getElementById('signout-btn')?.addEventListener('click', async () => {
+  try {
+    await Auth.signOut();
+    window.location.href = 'index.html';
+  } catch (error) {
+    console.error('Sign out failed:', error);
+  }
+});
   </script>
 </body>
 </html>

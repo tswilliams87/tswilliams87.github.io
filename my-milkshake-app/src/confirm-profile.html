@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <div class="navbar">
+    <a href="signin.html">Sign-In</a>
+    <a href="carousel.html">Doughgirl's</a>
+    <button id="signout-btn" class="nav-link">Sign Out</button>
+
+  </div>
   <h1>Confirm Your Account</h1>
   <form id="confirm-form">
     <label>Email: <input type="email" name="email" required /></label><br />
@@ -41,6 +47,14 @@
         statusMessage.textContent = `Error: ${error.message}`;
       }
     });
+    document.getElementById('signout-btn')?.addEventListener('click', async () => {
+  try {
+    await Auth.signOut();
+    window.location.href = 'signin.html';
+  } catch (error) {
+    console.error('Sign out failed:', error);
+  }
+});
   </script>
 </body>
 </html>

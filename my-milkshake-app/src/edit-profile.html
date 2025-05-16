@@ -7,7 +7,18 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Edit Your Profile</h1>
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="carousel.html">SourBitches</a>
+    <a href="confirm-profile.html">Verify Email</a>
+    <a href="change-password.html">Change Password</a>
+    <button id="signout-btn" class="nav-link">Sign Out</button>
+
+  </div>
+  <div class="welcome-container">
+    <h1>Welcome to Your Profile</h1>
+    <p>Here you can edit your profile information.</p>
+  </div>
   <button onclick="window.location.href='confirm-profile.html'">Confirm Account</button>
   <div>
     <label>Name: <input type="text" id="name" /></label>
@@ -15,8 +26,8 @@
   </div>
 
   <div>
-    <label>Favorite Thing: <input type="text" id="favoriteThing" /></label>
-    <button id="update-favorite">Update Favorite</button>
+    <label>Favorite Quote: <input type="text" id="favoriteThing" /></label>
+    <button id="update-favorite">Update Favorite Quote</button>
   </div>
 
   <div>
@@ -101,6 +112,14 @@
     }
 
     loadProfile();
+    document.getElementById('signout-btn')?.addEventListener('click', async () => {
+  try {
+    await Auth.signOut();
+    window.location.href = 'index.html';
+  } catch (error) {
+    console.error('Sign out failed:', error);
+  }
+});
   </script>
 </body>
 </html>

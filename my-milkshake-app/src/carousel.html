@@ -5,122 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carousel</title>
   <link rel="stylesheet" href="/styles.css">
-  <style>
-    .card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      width: 300px;
-      height: 400px;
-      margin: 0 auto;
-      background-color: #fff;
-    }
-
-    .card img {
-      width: 100%;
-      height: auto;
-      max-height: 60%;
-      object-fit: cover;
-    }
-
-    .card h2 {
-      margin: 10px 0;
-      font-size: 1.5rem;
-    }
-
-    .card p {
-      font-size: 1rem;
-      color: #555;
-    }
-
-    .carousel-container {
-      text-align: center;
-    }
-
-    .action-popup {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: white;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 10px 20px;
-      border-radius: 5px;
-      display: none;
-    }
-
-    .action-popup.nope {
-      background-color: red;
-    }
-
-    .action-popup.yes {
-      background-color: green;
-    }
-
-    .reload-button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-
-    .swipe-buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .swipe-button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-    }
-
-    .swipe-button.nope {
-      background-color: red;
-      color: white;
-    }
-
-    .swipe-button.yes {
-      background-color: green;
-      color: white;
-    }
-  </style>
+  
 </head>
 <body>
   <div class="navbar">
-    <a href="home.html">Home</a>
-    <a href="carousel.html">Carousel</a>
+    <a href="signin.html">Sign-In</a>
     <a href="create-profile.html">Create Profile</a>
     <a href="edit-profile.html">Profile</a>
+    <button id="signout-btn" class="nav-link">Sign Out</button>
+
   </div>
 
   <div class="carousel-container">
-    <h1>Swipe Left or Right to find your future</h1>
     <div id="carousel" class="carousel">
       <!-- Cards will be dynamically added here -->
     </div>
-    <div class="swipe-buttons">
-      <button id="nope-btn" class="swipe-button nope">Nope</button>
-      <button id="yes-btn" class="swipe-button yes">Yes, please</button>
-    </div>
+    
     <button id="reload-btn" class="reload-button" style="display: none;">Reload Profiles</button>
   </div>
+  <div class="swipe-buttons">
+    <button id="nope-btn" class="swipe-button nope">Not My starter</button>
+    <button id="yes-btn" class="swipe-button yes">Bake it Rain</button>
+  </div>
 
-  <div id="action-popup" class="action-popup"></div>
+  
 
   <script type="module">
 
@@ -187,7 +95,7 @@ async function createCard(profile) {
   nameElement.textContent = name;
 
   const favorite = document.createElement('p');
-  favorite.textContent = `Favorite: ${favoriteThing}`;
+  favorite.textContent = `${favoriteThing}`;
 
   card.appendChild(img);
   card.appendChild(nameElement);
@@ -208,15 +116,9 @@ async function updateCarousel() {
   }
 }
 
-function showPopup(action) {
-  actionPopup.textContent = action === 'yes' ? 'Yes, please' : 'Nope';
-  actionPopup.className = `action-popup ${action}`;
-  actionPopup.style.display = 'block';
-  setTimeout(() => actionPopup.style.display = 'none', 1000);
-}
 
 function swipe(action) {
-  showPopup(action);
+  
   currentIndex++;
   updateCarousel();
 }
@@ -226,6 +128,16 @@ yesBtn.addEventListener('click', () => swipe('yes'));
 reloadBtn.addEventListener('click', loadProfiles);
 
 loadProfiles();
+import { Auth } from 'aws-amplify';
+
+document.getElementById('signout-btn')?.addEventListener('click', async () => {
+  try {
+    await Auth.signOut();
+    window.location.href = 'signin.html';
+  } catch (error) {
+    console.error('Sign out failed:', error);
+  }
+});
 
   </script>
 </body>
