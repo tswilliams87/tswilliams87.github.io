@@ -1,11 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Carousel</title>
-  <link rel="stylesheet" href="/styles.css">
-  
+  <link rel="stylesheet" href="/styles.css"/>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .profile-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #profile-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .swipe-zone {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      z-index: 10;
+    }
+
+    .left {
+      left: 0;
+    }
+
+    .right {
+      right: 0;
+    }
+
+    .overlay-text {
+      position: absolute;
+      bottom: 10%;
+      left: 20px;
+      color: white;
+      text-shadow: 0 0 5px black;
+      z-index: 2;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 10px 0;
+      z-index: 100;
+    }
+
+    .navbar a, .navbar button.nav-link {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div class="navbar">
@@ -13,132 +83,84 @@
     <a href="create-profile.html">Create Profile</a>
     <a href="edit-profile.html">Profile</a>
     <button id="signout-btn" class="nav-link">Sign Out</button>
-
   </div>
 
-  <div class="carousel-container">
-    <div id="carousel" class="carousel">
-      <!-- Cards will be dynamically added here -->
+  <div class="profile-container">
+    <img id="profile-img" src="" alt="Profile Image"/>
+    <div class="overlay-text" id="profile-info">
+      <h1 id="profile-name"></h1>
+      <p id="profile-fav"></p>
     </div>
-    
-    <button id="reload-btn" class="reload-button" style="display: none;">Reload Profiles</button>
+    <div class="swipe-zone left" id="nope-zone"></div>
+    <div class="swipe-zone right" id="yes-zone"></div>
   </div>
-  <div class="swipe-buttons">
-    <button id="nope-btn" class="swipe-button nope">Not My starter</button>
-    <button id="yes-btn" class="swipe-button yes">Bake it Rain</button>
-  </div>
-
-  
 
   <script type="module">
+    import { fetchProfiles } from './api.js';
+    import { Storage, Auth } from 'aws-amplify';
 
-import { fetchProfiles, fetchOneProfile } from './api.js';
-import { Storage } from 'aws-amplify';
+    let profiles = [];
+    let currentIndex = 0;
 
-const carousel = document.getElementById('carousel');
-const reloadBtn = document.getElementById('reload-btn');
-const actionPopup = document.getElementById('action-popup');
-const nopeBtn = document.getElementById('nope-btn');
-const yesBtn = document.getElementById('yes-btn');
+    const imgEl = document.getElementById('profile-img');
+    const nameEl = document.getElementById('profile-name');
+    const favEl = document.getElementById('profile-fav');
 
-let profiles = [];
-let currentIndex = 0;
-
-async function loadProfiles() {
-  try {
-    const response = await fetchProfiles();
-    profiles = response || [];
-
-    currentIndex = 0;
-    await updateCarousel();
-    reloadBtn.style.display = 'none';
-    console.log('Loaded profiles:', profiles);
-
-  } catch (error) {
-    console.error('Failed to fetch profiles:', error);
-    console.log('Loaded profiles:', profiles);
-
-    profiles = [];
-    carousel.innerHTML = '<p>Error loading profiles</p>';
-    reloadBtn.style.display = 'block';
-  }
-}
-
-
-async function createCard(profile) {
-  const name = profile.name?.S || 'Unknown';
-  const favoriteThing = profile.favoriteThing?.S || 'Not specified';
- 
- // might need to flip this to filename linking it to the lamnda data that get returned. 
- // also did something wonky with those || `${profile.filename?.S || ''}`;
-
-  const s3Key = profile.picture?.S || profile.filename?.S
-
-  const card = document.createElement('div');
-  card.className = 'card';
-
-  const img = document.createElement('img');
-  if (s3Key && s3Key !== 'profiles/') {
-    try {
-      const result = await Storage.get(s3Key, { level: 'public' });
-      img.src = result;
-    } catch (error) {
-      console.error('Image fetch failed for key:', s3Key, error);
-      img.src = 'https://via.placeholder.com/300x400';
+    async function loadProfiles() {
+      try {
+        const response = await fetchProfiles();
+        profiles = response || [];
+        currentIndex = 0;
+        showProfile();
+      } catch (error) {
+        console.error('Failed to load profiles:', error);
+      }
     }
-  } else {
-    img.src = 'https://via.placeholder.com/300x400';
-  }
-  img.alt = name;
 
-  const nameElement = document.createElement('h2');
-  nameElement.textContent = name;
+    async function showProfile() {
+      if (currentIndex >= profiles.length) {
+        imgEl.src = 'https://via.placeholder.com/600x800';
+        nameEl.textContent = 'No more profiles';
+        favEl.textContent = '';
+        return;
+      }
 
-  const favorite = document.createElement('p');
-  favorite.textContent = `${favoriteThing}`;
+      const profile = profiles[currentIndex];
+      const name = profile.name?.S || 'Unknown';
+      const fav = profile.favoriteThing?.S || '';
+      const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
 
-  card.appendChild(img);
-  card.appendChild(nameElement);
-  card.appendChild(favorite);
+      nameEl.textContent = name;
+      favEl.textContent = fav;
 
-  return card;
-}
+      try {
+        const url = await Storage.get(s3Key, { level: 'public' });
+        imgEl.src = url;
+      } catch (err) {
+        console.error('Image load error:', s3Key, err);
+        imgEl.src = 'https://via.placeholder.com/600x800';
+      }
+    }
 
-async function updateCarousel() {
-  carousel.innerHTML = '';
-  if (currentIndex < profiles.length) {
-    const currentProfile = profiles[currentIndex];
-    const card = await createCard(currentProfile);
-    carousel.appendChild(card);
-  } else {
-    carousel.innerHTML = '<p>No more profiles</p>';
-    reloadBtn.style.display = 'block';
-  }
-}
+    function swipe(direction) {
+      console.log(`Swiped: ${direction}`);
+      currentIndex++;
+      showProfile();
+    }
 
+    document.getElementById('yes-zone').addEventListener('click', () => swipe('yes'));
+    document.getElementById('nope-zone').addEventListener('click', () => swipe('nope'));
 
-function swipe(action) {
-  
-  currentIndex++;
-  updateCarousel();
-}
+    document.getElementById('signout-btn')?.addEventListener('click', async () => {
+      try {
+        await Auth.signOut();
+        window.location.href = 'signin.html';
+      } catch (error) {
+        console.error('Sign out failed:', error);
+      }
+    });
 
-nopeBtn.addEventListener('click', () => swipe('nope'));
-yesBtn.addEventListener('click', () => swipe('yes'));
-reloadBtn.addEventListener('click', loadProfiles);
-
-loadProfiles();
-import { Auth } from 'aws-amplify';
-
-document.getElementById('signout-btn')?.addEventListener('click', async () => {
-  try {
-    await Auth.signOut();
-    window.location.href = 'signin.html';
-  } catch (error) {
-    console.error('Sign out failed:', error);
-  }
-});
-
+    loadProfiles();
   </script>
 </body>
 </html>
