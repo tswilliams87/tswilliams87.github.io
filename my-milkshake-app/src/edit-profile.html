@@ -57,6 +57,9 @@
     <label>Profile Picture: <input type="file" id="picture" accept="image/*" /></label>
     <button id="update-picture">Update Picture</button>
   </div>
+<div>
+    <a href="change-password.html" class="nav-link">Change Password</a>
+  </div>
 
   <div id="status-message" class="StatusBar"></div>
 
@@ -127,7 +130,7 @@
           contentType: file.type
         });
 
-        await updateField('filename', filename);
+        await updateField('picture', picture);
       } catch (err) {
         console.error('Failed to update picture:', err);
         statusMessage.textContent = 'Failed to update picture.';
