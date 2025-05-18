@@ -14,6 +14,30 @@ body, html {
   align-items: left;
 
 }
+/* Navbar Styling */
+.navbar {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+background:black;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+z-index: 1000;
+display: flex;
+justify-content: center;
+gap: 15px;
+padding: 10px 0;
+}
+
+.navbar a, .navbar button.nav-link {
+color: #007bff;
+text-decoration: none;
+font-weight: bold;
+background: none;
+border: none;
+cursor: pointer;
+font-size: 1rem;
+}
 
 
 .navbar a, .navbar button.nav-link {
@@ -26,58 +50,18 @@ body, html {
   font-size: 1rem;
 }
 
-/* Fullscreen Profile Layout */
+
+/* CArd conaeiner */
+#profile-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
 .profile-container {
   position: relative;
   width: 100vw;
   height: 100vh;
-}
-/*
-#profile-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: 0;
-}
-*/
-/* Swipe Zones */
-.swipe-zone.left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 20%;
-  height: 100%;
-  z-index: 10;
-}
-
-.flip-zone {
-  position: absolute;
-  top: 0;
-  left: 20%;
-  width: 60%;
-  height: 100%;
-  z-index: 10;
-}
-
-.swipe-zone.right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 20%;
-  height: 100%;
-  z-index: 10;
-}
-
-
-.left {
-  left: 0;
-}
-
-.right {
-  right: 0;
+  overflow: hidden;
 }
 
 .card {
@@ -85,29 +69,29 @@ body, html {
   height: 100vh;
   perspective: 1000px;
   position: relative;
-  z-index: 1;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
 }
-
 .card-face {
   width: 100%;
   height: 100%;
   position: absolute;
   backface-visibility: hidden;
-  transition: transform 0.6s ease-in-out;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.front {
+.card-face.front {
   z-index: 2;
   transform: rotateY(0deg);
 }
 
-.back {
-  background: black;
-  color: white;
+.card-face.back {
   transform: rotateY(180deg);
+  background: #111;
+  color: white;
+  z-index: 1;
 }
 
 .card.flipped .front {
@@ -119,35 +103,63 @@ body, html {
   z-index: 3;
 }
 
-#profile-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
+/* Swipe + Flip Zones */
+
+
+
+.swipe-zone.left,
+.swipe-zone.right,
+.flip-zone {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  z-index: 10;
 }
+
+.swipe-zone.left {
+  left: 0;
+  width: 35%;
+}
+
+.flip-zone {
+  left: 20%;
+  width: 30%;
+}
+
+.swipe-zone.right {
+  right: 0;
+  width: 35%;
+}
+
+/* Swipe animation */
+.card.swipe-left {
+  transform: translateX(-100vw) rotate(-15deg);
+}
+
+.card.swipe-right {
+  transform: translateX(100vw) rotate(15deg);
+}
+
+
+
+
 
 .profile-bio {
   text-align: center;
   padding: 20px;
 }
-
+/*
 .flip-zone {
   position: absolute;
   left: 20%;
   width: 60%;
   height: 100%;
   z-index: 20;
-}
+}*/
 
 
 /* Overlay Text */
-.overlay-text {
-  position: absolute;
-  bottom: 10%;
-  left: 20px;
-  color: white;
-  text-shadow: 0 0 5px black;
-  z-index: 2;
-}
+
 
 .welcome-container {
   display: flex;
@@ -182,68 +194,4 @@ body, html {
 .welcome-container a:hover {
   background-color: #0056b3;
 }
-/* Navbar Styling */
-.navbar {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-background:black;
-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-z-index: 1000;
-display: flex;
-justify-content: center;
-gap: 15px;
-padding: 10px 0;
-}
 
-.navbar a, .navbar button.nav-link {
-color: #007bff;
-text-decoration: none;
-font-weight: bold;
-background: none;
-border: none;
-cursor: pointer;
-font-size: 1rem;
-}
-
-
-.profile-container {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-}
-
-#profile-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: 0;
-}
-
-/* Swipe Zones */
-.swipe-zone {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  z-index: 10;
-}
-
-.left {
-  left: 0;
-}
-.right {
-  right: 0;
-}
-/* Overlay Text */
-.overlay-text {
-  position: absolute;
-  bottom: 10%;
-  left: 20px;
-  color: white;
-  text-shadow: 0 0 5px black;
-  z-index: 2;
-}
