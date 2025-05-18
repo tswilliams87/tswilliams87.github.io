@@ -154,6 +154,8 @@ body, html {
   justify-content: center;
   height: 100vh;
   text-align: center;
+  color: white;
+  background-color: black;
 }
 
 .welcome-container h1 {
