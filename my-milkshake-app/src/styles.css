@@ -5,6 +5,8 @@ body, html {
   height: 100%;
   font-family: Arial, sans-serif;
   overflow: hidden;
+  background-color: black;
+  color: white;
 }
 .buttons {
   display: flex;
@@ -13,20 +15,6 @@ body, html {
 
 }
 
-/* Navbar Styling */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  padding: 10px 0;
-}
 
 .navbar a, .navbar button.nav-link {
   color: #007bff;
@@ -168,6 +156,8 @@ body, html {
   justify-content: center;
   height: 100vh;
   text-align: center;
+  color: white;
+  background-color: black;
 }
 
 .welcome-container h1 {
@@ -198,7 +188,7 @@ position: fixed;
 top: 0;
 left: 0;
 width: 100%;
-background: #fff;
+background:black;
 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 z-index: 1000;
 display: flex;

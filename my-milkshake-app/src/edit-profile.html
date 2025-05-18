@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Profile</title>
   <link rel="stylesheet" href="/styles.css">
-
+ <link rel="icon" type="image/png" href="/favicon.png">
   <style> 
 
 .ProfileWelcome {
@@ -28,15 +28,14 @@
 <body>
   <div class="navbar">
     <a href="home.html">Home</a>
-    <a href="carousel.html">SourBitches</a>
+    <a href="carousel.html">Missed Connections</a>
     <a href="confirm-profile.html">Verify Email</a>
-    <a href="change-password.html">Change Password</a>
     <button id="signout-btn" class="nav-link">Sign Out</button>
 
   </div>
   <div class="ProfileWelcome">
-    <h1>Welcome to Your Kitchen</h1>
-    <p>Give em something to Yeast their eyes on</p>
+    <h1>Profile and Missed Connection Information</h1>
+    
   </div>
   
   <div>
@@ -49,7 +48,7 @@
     <button id="update-favorite">Update Favorite Quote</button>
   </div>
   <div>
-    <label>Recipe Do's and Dont's: <input type="text" id="bio" /></label>
+    <label>Where did we cross path's? What happened? <input type="text" id="bio" /></label>
     <button id="update-bio">Update Notes</button>
   </div>
 
@@ -81,6 +80,7 @@
     document.getElementById('update-favorite').addEventListener('click', () => updateField('favoriteThing', favoriteInput.value));
     document.getElementById('update-bio').addEventListener('click', () => updateField('bio', bioInput.value));
     document.getElementById('update-picture').addEventListener('click', updatePicture);
+    document.getElementById('update-bio').addEventListener('click', () => updateField('bio', bioInput.value));
 
     async function loadProfile() {
       try {

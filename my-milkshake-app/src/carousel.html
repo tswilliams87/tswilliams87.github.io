@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Carousel</title>
   <link rel="stylesheet" href="/styles.css"/>
+  <link rel="icon" type="image/png" href="/favicon.png">
+
   <style>
     html, body {
       margin: 0;
       padding: 1vh;
       height: 100%;
       overflow: hidden;
+      background-color: black;
     }
 
     .profile-container {
@@ -54,34 +57,15 @@
       z-index: 2;
     }
 
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: white;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      padding: 10px 0;
-      z-index: 100;
-    }
-
-    .navbar a, .navbar button.nav-link {
-      color: #007bff;
-      text-decoration: none;
-      font-weight: bold;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
+  
   </style>
 </head>
 <body>
   <div class="navbar">
+     <a href="create-profile.html">Create Profile</a>
     <a href="signin.html">Sign-In</a>
-    <a href="create-profile.html">Create Profile</a>
     <a href="edit-profile.html">Profile</a>
+    <a href="confirm-profile.html">Verify Email</a>
     <button id="signout-btn" class="nav-link">Sign Out</button>
   </div>
 
@@ -94,6 +78,7 @@
       <div class="profile-bio" id="profile-bio">
         <h1 id="profile-name"></h1>
         <p id="profile-fav"></p>
+        <p id="profile-bio-text"></p>
       </div>
     </div>
   </div>
@@ -114,6 +99,7 @@
     const imgEl = document.getElementById('profile-img');
     const nameEl = document.getElementById('profile-name');
     const favEl = document.getElementById('profile-fav');
+    const bioEl = document.getElementById('profile-bio-text');
 
     async function loadProfiles() {
       try {
@@ -142,7 +128,7 @@
       const name = profile.name?.S || 'Unknown';
       const fav = profile.favoriteThing?.S || '';
       const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
-
+      const bio = profile.bio?.S || 'No bio available';
      // nameEl.textContent = name;
      // favEl.textContent = fav;
 
@@ -150,7 +136,8 @@
         const url = await Storage.get(s3Key, { level: 'public' });
         imgEl.src = url;
         nameEl.textContent = name;
-favEl.textContent = fav;
+        favEl.textContent = fav;
+        bioEl.textContent = bio;
 
       } catch (err) {
         console.error('Image load error:', s3Key, err);
