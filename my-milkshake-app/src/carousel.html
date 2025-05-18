@@ -55,7 +55,7 @@ import { fetchProfiles } from './api.js';
 import { Storage, Auth } from 'aws-amplify';
 import awsconfig from './aws-exports.js';
 import { Amplify } from 'aws-amplify';
-
+import { updateUserLocationToAPI } from './main.js';
 Amplify.configure(awsconfig);
 
 let profiles = [];
@@ -120,6 +120,7 @@ document.getElementById('flip-zone').addEventListener('click', () => {
 });
 
 loadProfiles();
+updateUserLocationToAPI();
 </script>
 
  </body>
