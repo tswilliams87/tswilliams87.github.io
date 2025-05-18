@@ -34,8 +34,8 @@
 
   </div>
   <div class="ProfileWelcome">
-    <h1>Welcome to Your Kitchen</h1>
-    <p>Give em something to Yeast their eyes on</p>
+    <h1>Profile and Missed Connection Information</h1>
+    
   </div>
   
   <div>
@@ -48,8 +48,8 @@
     <button id="update-favorite">Update Favorite Quote</button>
   </div>
   <div>
-    <label>Recipe Do's and Dont's: <input type="text" id="bio" /></label>
-    <button id="bio">Update Notes</button>
+    <label>Where did we cross path's? What happened? <input type="text" id="bio" /></label>
+    <button id="update-bio">Update Notes</button>
   </div>
 
   <div>
@@ -74,10 +74,12 @@
     const favoriteInput = document.getElementById('favoriteThing');
     const pictureInput = document.getElementById('picture');
     const statusMessage = document.getElementById('status-message');
+    const bioInput = document.getElementById('bio');
 
     document.getElementById('update-name').addEventListener('click', () => updateField('name', nameInput.value));
     document.getElementById('update-favorite').addEventListener('click', () => updateField('favoriteThing', favoriteInput.value));
     document.getElementById('update-picture').addEventListener('click', updatePicture);
+    document.getElementById('update-bio').addEventListener('click', () => updateField('bio', bioInput.value));
 
     async function loadProfile() {
       try {

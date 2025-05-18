@@ -62,8 +62,8 @@
 </head>
 <body>
   <div class="navbar">
+     <a href="create-profile.html">Create Profile</a>
     <a href="signin.html">Sign-In</a>
-    <a href="create-profile.html">Create Profile</a>
     <a href="edit-profile.html">Profile</a>
     <button id="signout-btn" class="nav-link">Sign Out</button>
   </div>
@@ -77,6 +77,7 @@
       <div class="profile-bio" id="profile-bio">
         <h1 id="profile-name"></h1>
         <p id="profile-fav"></p>
+        <p id="profile-bio-text"></p>
       </div>
     </div>
   </div>
@@ -97,6 +98,7 @@
     const imgEl = document.getElementById('profile-img');
     const nameEl = document.getElementById('profile-name');
     const favEl = document.getElementById('profile-fav');
+    const bioEl = document.getElementById('profile-bio-text');
 
     async function loadProfiles() {
       try {
@@ -125,7 +127,7 @@
       const name = profile.name?.S || 'Unknown';
       const fav = profile.favoriteThing?.S || '';
       const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
-
+      const bio = profile.bio?.S || 'No bio available';
      // nameEl.textContent = name;
      // favEl.textContent = fav;
 
@@ -133,7 +135,8 @@
         const url = await Storage.get(s3Key, { level: 'public' });
         imgEl.src = url;
         nameEl.textContent = name;
-favEl.textContent = fav;
+        favEl.textContent = fav;
+        bioEl.textContent = bio;
 
       } catch (err) {
         console.error('Image load error:', s3Key, err);
