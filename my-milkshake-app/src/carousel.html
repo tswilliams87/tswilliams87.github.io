@@ -1,169 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carousel</title>
-  <link rel="stylesheet" href="/styles.css"/>
-  <link rel="icon" type="image/png" href="/favicon.png">
-
-  <style>
-    html, body {
-      margin: 0;
-      padding: 1vh;
-      height: 100%;
-      overflow: hidden;
-      background-color: black;
-    }
-
-    .profile-container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-    }
-
-    #profile-img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: 0;
-    }
-
-    .swipe-zone {
-      position: absolute;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      z-index: 10;
-    }
-
-    .left {
-      left: 0;
-    }
-
-    .right {
-      right: 0;
-    }
-
-    .overlay-text {
-      position: absolute;
-      bottom: 10%;
-      left: 20px;
-      color: white;
-      text-shadow: 0 0 5px black;
-      z-index: 2;
-    }
-
-  
-  </style>
-</head>
-<body>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Carousel
+  </title>
+  <link href="/styles.css" rel="stylesheet"/>
+  <link href="/favicon.png" rel="icon" type="image/png"/>
+ </head>
+ <body>
   <div class="navbar">
-     <a href="create-profile.html">Create Profile</a>
-    <a href="signin.html">Sign-In</a>
-    <a href="edit-profile.html">Profile</a>
-    <a href="confirm-profile.html">Verify Email</a>
-    <button id="signout-btn" class="nav-link">Sign Out</button>
+   <a href="create-profile.html">
+    Create Profile
+   </a>
+   <a href="signin.html">
+    Sign-In
+   </a>
+   <a href="edit-profile.html">
+    Profile
+   </a>
+   <a href="confirm-profile.html">
+    Verify Email
+   </a>
+   <button class="nav-link" id="signout-btn">
+    Sign Out
+   </button>
   </div>
-
   <div class="profile-container">
-  <div class="card" id="card">
+   <div class="card" id="card">
     <div class="card-face front">
-      <img id="profile-img" src="" alt="Profile Image" />
+     <img alt="Profile Image" id="profile-img" src=""/>
     </div>
     <div class="card-face back">
-      <div class="profile-bio" id="profile-bio">
-        <h1 id="profile-name"></h1>
-        <p id="profile-fav"></p>
-        <p id="profile-bio-text"></p>
-      </div>
+     <div class="profile-bio" id="profile-bio">
+      <h1 id="profile-name">
+      </h1>
+      <p id="profile-fav">
+      </p>
+      <p id="profile-bio-text">
+      </p>
+     </div>
     </div>
+   </div>
+   <div class="swipe-zone left" id="nope-zone">
+   </div>
+   <div class="flip-zone" id="flip-zone">
+   </div>
+   <div class="swipe-zone right" id="yes-zone">
+   </div>
   </div>
+ <script type="module">
+import { fetchProfiles } from './api.js';
+import { Storage, Auth } from 'aws-amplify';
+import awsconfig from './aws-exports.js';
+import { Amplify } from 'aws-amplify';
 
-  <div class="swipe-zone left" id="nope-zone"></div>
-  <div class="flip-zone" id="flip-zone"></div>
-  <div class="swipe-zone right" id="yes-zone"></div>
-</div>
+Amplify.configure(awsconfig);
+
+let profiles = [];
+let currentIndex = 0;
+
+const card = document.getElementById('card');
+const imgEl = document.getElementById('profile-img');
+const nameEl = document.getElementById('profile-name');
+const favEl = document.getElementById('profile-fav');
+const bioEl = document.getElementById('profile-bio-text');
+
+async function loadProfiles() {
+  try {
+    const response = await fetchProfiles();
+    profiles = response || [];
+    currentIndex = 0;
+    showProfile();
+  } catch (error) {
+    console.error('Failed to load profiles:', error);
+  }
+}
+
+async function showProfile() {
+  if (currentIndex >= profiles.length) {
+    currentIndex = 0;
+  }
+
+  const profile = profiles[currentIndex];
+  const name = profile.name?.S || 'Unknown';
+  const fav = profile.favoriteThing?.S || '';
+  const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
+  const bio = profile.bio?.S || 'No bio available';
 
 
-  <script type="module">
-    import { fetchProfiles } from './api.js';
-    import { Storage, Auth } from 'aws-amplify';
+  nameEl.textContent = name;
+  favEl.textContent = fav;
+  bioEl.textContent = bio;
 
-    let profiles = [];
-    let currentIndex = 0;
+  try {
+    const url = await Storage.get(s3Key, { level: 'public' });
+    imgEl.src = url;
+  } catch (err) {
+    console.error('Image load error:', s3Key, err);
+    imgEl.src = 'https://via.placeholder.com/600x800';
+  }
+}
 
-    const imgEl = document.getElementById('profile-img');
-    const nameEl = document.getElementById('profile-name');
-    const favEl = document.getElementById('profile-fav');
-    const bioEl = document.getElementById('profile-bio-text');
+function swipe(direction) {
+  card.classList.remove('flipped');
+  card.classList.add(direction === 'yes' ? 'swipe-right' : 'swipe-left');
+  setTimeout(() => {
+    card.classList.remove('swipe-right', 'swipe-left');
+    currentIndex++;
+    showProfile();
+  }, 500);
+}
 
-    async function loadProfiles() {
-      try {
-        const response = await fetchProfiles();
-        profiles = response || [];
-        currentIndex = 0;
-       showProfile();
-      } catch (error) {
-        console.error('Failed to load profiles:', error);
-      }
-    }
-    document.getElementById('flip-zone').addEventListener('click', () => {
-  document.getElementById('card').classList.toggle('flipped');
+document.getElementById('yes-zone').addEventListener('click', () => swipe('yes'));
+document.getElementById('nope-zone').addEventListener('click', () => swipe('nope'));
+document.getElementById('flip-zone').addEventListener('click', () => {
+  card.classList.toggle('flipped');
 });
 
+loadProfiles();
+</script>
 
-    async function showProfile() {
-     
-      if (currentIndex >= profiles.length) {
-        window.location.href = 'carousel.html'
-        return;
-      }
-        
-
-      const profile = profiles[currentIndex];
-      const name = profile.name?.S || 'Unknown';
-      const fav = profile.favoriteThing?.S || '';
-      const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
-      const bio = profile.bio?.S || 'No bio available';
-     // nameEl.textContent = name;
-     // favEl.textContent = fav;
-
-      try {
-        const url = await Storage.get(s3Key, { level: 'public' });
-        imgEl.src = url;
-        nameEl.textContent = name;
-        favEl.textContent = fav;
-        bioEl.textContent = bio;
-
-      } catch (err) {
-        console.error('Image load error:', s3Key, err);
-        imgEl.src = 'https://via.placeholder.com/600x800';
-      }
-    }
-
-    function swipe(direction) {
-      console.log(`Swiped: ${direction}`);
-     currentIndex++;
-      showProfile();
-    }
-
-    document.getElementById('yes-zone').addEventListener('click', () => swipe('yes'));
-    document.getElementById('nope-zone').addEventListener('click', () => swipe('nope'));
-
-    document.getElementById('signout-btn')?.addEventListener('click', async () => {
-      try {
-        await Auth.signOut();
-        window.location.href = 'signin.html';
-      } catch (error) {
-        console.error('Sign out failed:', error);
-      }
-    });
-
-    loadProfiles();
-  </script>
-</body>
+ </body>
 </html>
