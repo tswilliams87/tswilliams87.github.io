@@ -20,7 +20,8 @@ export default defineConfig({
         signin: 'src/signin.html',
         confirmProfile: 'src/confirm-profile.html',
         changePassword: 'src/change-password.html',
-        forgotPassword: 'src/forgot-password.html'
+        forgotPassword: 'src/forgot-password.html',
+        favicon: 'src/favicon.png'
       },
     },
   },
