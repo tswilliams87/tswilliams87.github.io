@@ -59,4 +59,65 @@ export async function createProfileWithImage(form, id, email) {
   }
 }
 
+
+export async function updateUserLocationToAPI() {
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    const userId = user?.attributes?.sub;
+    console.log("User ID:", userId);
+    console.log("User attributes:", user?.attributes); 
+
+    if (!userId) {
+      console.error("User ID not found");
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      console.error("Geolocation not supported");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const timestamp = new Date().toISOString();
+        console.log("Geolocation position:", position);
+
+        const response = await fetch(`https://kuiu45fc06.execute-api.us-east-1.amazonaws.com/profiles/user/${userId}/location`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            latitude,
+            longitude,
+            timestamp
+          })
+         
+        });
+         console.log("Location sent to API:", { latitude, longitude, timestamp });
+         console.log("API response:", response);
+
+        if (!response.ok) {
+          console.error("Failed to send location:", await response.text());
+        } else {
+          console.log("Location sent successfully");
+        }
+      },
+      (err) => {
+        console.error("Geolocation error:", err.message);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
+  } catch (err) {
+    console.error("Auth error or location fetch failed:", err);
+  }
+}
+
+
+
 export { Storage };

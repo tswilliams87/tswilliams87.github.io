@@ -85,6 +85,33 @@ export const handler = async (event) => {
       await dynamoDBClient.send(new PutItemCommand(dbParams));
       return successResponse("Profile created successfully!", null, 201);
     }
+if (method === "PUT" && path.startsWith("/profiles/user/") && path.endsWith("/location")) {
+  const userId = event.pathParameters?.id;
+  if (!userId) return errorResponse("Missing user ID in path", 400);
+  if (!event.body) return errorResponse("Missing request body", 400);
+
+  const { latitude, longitude, timestamp } = JSON.parse(event.body);
+  if (!latitude || !longitude || !timestamp) {
+    return errorResponse("Missing latitude, longitude, or timestamp", 400);
+  }
+
+  await dynamoDBClient.send(new UpdateItemCommand({
+    TableName: TABLE_NAME,
+    Key: { id: { S: userId } },
+    UpdateExpression: "SET lastLocation = :loc",
+    ExpressionAttributeValues: {
+      ":loc": {
+        M: {
+          latitude: { N: latitude.toString() },
+          longitude: { N: longitude.toString() },
+          timestamp: { S: timestamp }
+        }
+      }
+    }
+  }));
+
+  return successResponse("Location updated via ID route");
+}
 
     if (method === "PUT" && path.startsWith("/profiles/user/")) {
       if (!event.body) return errorResponse("Missing request body", 400);
@@ -152,6 +179,15 @@ export const handler = async (event) => {
       })
     };
   }
+
+
+
+
+
+
+
+
+
 };
 
 function successResponse(message, data = null, code = 200) {
