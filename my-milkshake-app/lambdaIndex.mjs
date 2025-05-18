@@ -89,7 +89,7 @@ export const handler = async (event) => {
     if (method === "PUT" && path.startsWith("/profiles/user/")) {
       if (!event.body) return errorResponse("Missing request body", 400);
       const id = decodeURIComponent(path.split("/").pop());
-      const { name, favoriteThing, filename, email, picture } = JSON.parse(event.body);
+      const { name, favoriteThing, filename, email, picture, bio } = JSON.parse(event.body);
 
       const updateExpr = [];
       const names = {};
@@ -119,6 +119,11 @@ export const handler = async (event) => {
         updateExpr.push("#fn = :fn");
         names["#fn"] = "filename";
         values[":fn"] = { S: filename };
+      }
+      if (bio) {
+        updateExpr.push("#b = :b");
+        names["#b"] = "bio";
+        values[":b"] = { S: bio };
       }
 
       if (updateExpr.length === 0) return errorResponse("No updatable fields provided", 400);

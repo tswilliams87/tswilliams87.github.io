@@ -19,7 +19,9 @@ export default defineConfig({
         styles: 'src/styles.css',
         signin: 'src/signin.html',
         confirmProfile: 'src/confirm-profile.html',
-        changePassword: 'src/change-password.html'
+        changePassword: 'src/change-password.html',
+        forgotPassword: 'src/forgot-password.html',
+        favicon: 'src/favicon.png'
       },
     },
   },

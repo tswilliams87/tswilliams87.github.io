@@ -1,144 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carousel</title>
-  <link rel="stylesheet" href="/styles.css">
-  
-</head>
-<body>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Carousel
+  </title>
+  <link href="/styles.css" rel="stylesheet"/>
+  <link href="/favicon.png" rel="icon" type="image/png"/>
+ </head>
+ <body>
   <div class="navbar">
-    <a href="signin.html">Sign-In</a>
-    <a href="create-profile.html">Create Profile</a>
-    <a href="edit-profile.html">Profile</a>
-    <button id="signout-btn" class="nav-link">Sign Out</button>
-
+   <a href="create-profile.html">
+    Create Profile
+   </a>
+   <a href="signin.html">
+    Sign-In
+   </a>
+   <a href="edit-profile.html">
+    Profile
+   </a>
+   <a href="confirm-profile.html">
+    Verify Email
+   </a>
+   <button class="nav-link" id="signout-btn">
+    Sign Out
+   </button>
   </div>
-
-  <div class="carousel-container">
-    <div id="carousel" class="carousel">
-      <!-- Cards will be dynamically added here -->
+  <div class="profile-container">
+   <div class="card" id="card">
+    <div class="card-face front">
+     <img alt="Profile Image" id="profile-img" src=""/>
     </div>
-    
-    <button id="reload-btn" class="reload-button" style="display: none;">Reload Profiles</button>
+    <div class="card-face back">
+     <div class="profile-bio" id="profile-bio">
+      <h1 id="profile-name">
+      </h1>
+      <p id="profile-fav">
+      </p>
+      <p id="profile-bio-text">
+      </p>
+     </div>
+    </div>
+   </div>
+   <div class="swipe-zone left" id="nope-zone">
+   </div>
+   <div class="flip-zone" id="flip-zone">
+   </div>
+   <div class="swipe-zone right" id="yes-zone">
+   </div>
   </div>
-  <div class="swipe-buttons">
-    <button id="nope-btn" class="swipe-button nope">Not My starter</button>
-    <button id="yes-btn" class="swipe-button yes">Bake it Rain</button>
-  </div>
+ <script type="module">
+import { fetchProfiles } from './api.js';
+import { Storage, Auth } from 'aws-amplify';
+import awsconfig from './aws-exports.js';
+import { Amplify } from 'aws-amplify';
 
-  
-
-  <script type="module">
-
-import { fetchProfiles, fetchOneProfile } from './api.js';
-import { Storage } from 'aws-amplify';
-
-const carousel = document.getElementById('carousel');
-const reloadBtn = document.getElementById('reload-btn');
-const actionPopup = document.getElementById('action-popup');
-const nopeBtn = document.getElementById('nope-btn');
-const yesBtn = document.getElementById('yes-btn');
+Amplify.configure(awsconfig);
 
 let profiles = [];
 let currentIndex = 0;
+
+const card = document.getElementById('card');
+const imgEl = document.getElementById('profile-img');
+const nameEl = document.getElementById('profile-name');
+const favEl = document.getElementById('profile-fav');
+const bioEl = document.getElementById('profile-bio-text');
 
 async function loadProfiles() {
   try {
     const response = await fetchProfiles();
     profiles = response || [];
-
     currentIndex = 0;
-    await updateCarousel();
-    reloadBtn.style.display = 'none';
-    console.log('Loaded profiles:', profiles);
-
+    showProfile();
   } catch (error) {
-    console.error('Failed to fetch profiles:', error);
-    console.log('Loaded profiles:', profiles);
-
-    profiles = [];
-    carousel.innerHTML = '<p>Error loading profiles</p>';
-    reloadBtn.style.display = 'block';
+    console.error('Failed to load profiles:', error);
   }
 }
 
+async function showProfile() {
+  if (currentIndex >= profiles.length) {
+    currentIndex = 0;
+  }
 
-async function createCard(profile) {
+  const profile = profiles[currentIndex];
   const name = profile.name?.S || 'Unknown';
-  const favoriteThing = profile.favoriteThing?.S || 'Not specified';
- 
- // might need to flip this to filename linking it to the lamnda data that get returned. 
- // also did something wonky with those || `${profile.filename?.S || ''}`;
-
-  const s3Key = profile.picture?.S || profile.filename?.S
-
-  const card = document.createElement('div');
-  card.className = 'card';
-
-  const img = document.createElement('img');
-  if (s3Key && s3Key !== 'profiles/') {
-    try {
-      const result = await Storage.get(s3Key, { level: 'public' });
-      img.src = result;
-    } catch (error) {
-      console.error('Image fetch failed for key:', s3Key, error);
-      img.src = 'https://via.placeholder.com/300x400';
-    }
-  } else {
-    img.src = 'https://via.placeholder.com/300x400';
-  }
-  img.alt = name;
-
-  const nameElement = document.createElement('h2');
-  nameElement.textContent = name;
-
-  const favorite = document.createElement('p');
-  favorite.textContent = `${favoriteThing}`;
-
-  card.appendChild(img);
-  card.appendChild(nameElement);
-  card.appendChild(favorite);
-
-  return card;
-}
-
-async function updateCarousel() {
-  carousel.innerHTML = '';
-  if (currentIndex < profiles.length) {
-    const currentProfile = profiles[currentIndex];
-    const card = await createCard(currentProfile);
-    carousel.appendChild(card);
-  } else {
-    carousel.innerHTML = '<p>No more profiles</p>';
-    reloadBtn.style.display = 'block';
-  }
-}
+  const fav = profile.favoriteThing?.S || '';
+  const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
+  const bio = profile.bio?.S || 'No bio available';
 
 
-function swipe(action) {
-  
-  currentIndex++;
-  updateCarousel();
-}
+  nameEl.textContent = name;
+  favEl.textContent = fav;
+  bioEl.textContent = bio;
 
-nopeBtn.addEventListener('click', () => swipe('nope'));
-yesBtn.addEventListener('click', () => swipe('yes'));
-reloadBtn.addEventListener('click', loadProfiles);
-
-loadProfiles();
-import { Auth } from 'aws-amplify';
-
-document.getElementById('signout-btn')?.addEventListener('click', async () => {
   try {
-    await Auth.signOut();
-    window.location.href = 'signin.html';
-  } catch (error) {
-    console.error('Sign out failed:', error);
+    const url = await Storage.get(s3Key, { level: 'public' });
+    imgEl.src = url;
+  } catch (err) {
+    console.error('Image load error:', s3Key, err);
+    imgEl.src = 'https://via.placeholder.com/600x800';
   }
+}
+
+function swipe(direction) {
+  card.classList.remove('flipped');
+  card.classList.add(direction === 'yes' ? 'swipe-right' : 'swipe-left');
+  setTimeout(() => {
+    card.classList.remove('swipe-right', 'swipe-left');
+    currentIndex++;
+    showProfile();
+  }, 500);
+}
+
+document.getElementById('yes-zone').addEventListener('click', () => swipe('yes'));
+document.getElementById('nope-zone').addEventListener('click', () => swipe('nope'));
+document.getElementById('flip-zone').addEventListener('click', () => {
+  card.classList.toggle('flipped');
 });
 
-  </script>
-</body>
+loadProfiles();
+</script>
+
+ </body>
 </html>

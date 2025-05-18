@@ -5,21 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Profile</title>
   <link rel="stylesheet" href="/styles.css">
+ <link rel="icon" type="image/png" href="/favicon.png">
+  <style> 
+
+.ProfileWelcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 20vh;
+  width: 50vh;
+  text-align: center;
+}
+.StatusBar {
+
+  background-color: #007bff;
+  color: black;
+ 
+}
+  </style>
 </head>
 <body>
   <div class="navbar">
     <a href="home.html">Home</a>
-    <a href="carousel.html">SourBitches</a>
+    <a href="carousel.html">Missed Connections</a>
     <a href="confirm-profile.html">Verify Email</a>
-    <a href="change-password.html">Change Password</a>
     <button id="signout-btn" class="nav-link">Sign Out</button>
 
   </div>
-  <div class="welcome-container">
-    <h1>Welcome to Your Profile</h1>
-    <p>Here you can edit your profile information.</p>
+  <div class="ProfileWelcome">
+    <h1>Profile and Missed Connection Information</h1>
+    
   </div>
-  <button onclick="window.location.href='confirm-profile.html'">Confirm Account</button>
+  
   <div>
     <label>Name: <input type="text" id="name" /></label>
     <button id="update-name">Update Name</button>
@@ -29,13 +47,20 @@
     <label>Favorite Quote: <input type="text" id="favoriteThing" /></label>
     <button id="update-favorite">Update Favorite Quote</button>
   </div>
+  <div>
+    <label>Where did we cross path's? What happened? <input type="text" id="bio" /></label>
+    <button id="update-bio">Update Notes</button>
+  </div>
 
   <div>
     <label>Profile Picture: <input type="file" id="picture" accept="image/*" /></label>
     <button id="update-picture">Update Picture</button>
   </div>
+<div>
+    <a href="change-password.html" class="nav-link">Change Password</a>
+  </div>
 
-  <div id="status-message"></div>
+  <div id="status-message" class="StatusBar"></div>
 
   <script type="module">
     import { Auth, Storage } from 'aws-amplify';
@@ -49,10 +74,13 @@
     const favoriteInput = document.getElementById('favoriteThing');
     const pictureInput = document.getElementById('picture');
     const statusMessage = document.getElementById('status-message');
+    const bioInput = document.getElementById('bio');
 
     document.getElementById('update-name').addEventListener('click', () => updateField('name', nameInput.value));
     document.getElementById('update-favorite').addEventListener('click', () => updateField('favoriteThing', favoriteInput.value));
+    document.getElementById('update-bio').addEventListener('click', () => updateField('bio', bioInput.value));
     document.getElementById('update-picture').addEventListener('click', updatePicture);
+    document.getElementById('update-bio').addEventListener('click', () => updateField('bio', bioInput.value));
 
     async function loadProfile() {
       try {
@@ -66,7 +94,7 @@
         favoriteInput.value = data.favoriteThing;
       } catch (error) {
         console.error('Failed to load profile:', error);
-        statusMessage.textContent = 'Error loading profile.';
+        statusMessage.textContent = 'No profile signed in.';
       }
     }
 
@@ -104,7 +132,7 @@
           contentType: file.type
         });
 
-        await updateField('filename', filename);
+        await updateField('picture', picture);
       } catch (err) {
         console.error('Failed to update picture:', err);
         statusMessage.textContent = 'Failed to update picture.';
