@@ -86,14 +86,23 @@
   </div>
 
   <div class="profile-container">
-    <img id="profile-img" src="" alt="Profile Image"/>
-    <div class="overlay-text" id="profile-info">
-      <h1 id="profile-name"></h1>
-      <p id="profile-fav"></p>
+  <div class="card" id="card">
+    <div class="card-face front">
+      <img id="profile-img" src="" alt="Profile Image" />
     </div>
-    <div class="swipe-zone left" id="nope-zone"></div>
-    <div class="swipe-zone right" id="yes-zone"></div>
+    <div class="card-face back">
+      <div class="profile-bio" id="profile-bio">
+        <h1 id="profile-name"></h1>
+        <p id="profile-fav"></p>
+      </div>
+    </div>
   </div>
+
+  <div class="swipe-zone left" id="nope-zone"></div>
+  <div class="flip-zone" id="flip-zone"></div>
+  <div class="swipe-zone right" id="yes-zone"></div>
+</div>
+
 
   <script type="module">
     import { fetchProfiles } from './api.js';
@@ -116,6 +125,9 @@
         console.error('Failed to load profiles:', error);
       }
     }
+    document.getElementById('flip-zone').addEventListener('click', () => {
+  document.getElementById('card').classList.toggle('flipped');
+});
 
 
     async function showProfile() {
@@ -131,12 +143,15 @@
       const fav = profile.favoriteThing?.S || '';
       const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
 
-      nameEl.textContent = name;
-      favEl.textContent = fav;
+     // nameEl.textContent = name;
+     // favEl.textContent = fav;
 
       try {
         const url = await Storage.get(s3Key, { level: 'public' });
         imgEl.src = url;
+        nameEl.textContent = name;
+favEl.textContent = fav;
+
       } catch (err) {
         console.error('Image load error:', s3Key, err);
         imgEl.src = 'https://via.placeholder.com/600x800';

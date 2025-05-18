@@ -9,14 +9,14 @@ This roadmap outlines the structured development plan for the Milkshake app, foc
 🔧 **Goal:** Ensure secure user management and proper session handling across your app.
 
 ### Tasks:
-- [ ] Link **Create Profile** functionality with **Amazon Cognito**:
+- [X ] Link **Create Profile** functionality with **Amazon Cognito**:
   - Capture email and other required info.
   - Register with Cognito using `Auth.signUp()`.
   - Store profile in **DynamoDB** after Cognito success.
-- [ ] Ensure **sessions** persist:
+- [X ] Ensure **sessions** persist:
   - Use `Auth.currentAuthenticatedUser()` and `Auth.currentSession()` on page load.
   - Redirect unauthorized users appropriately.
-- [ ] Store Cognito user ID in DynamoDB for future queries and reference.
+- [ X] Store Cognito user ID in DynamoDB for future queries and reference.
 
 ---
 
@@ -24,11 +24,11 @@ This roadmap outlines the structured development plan for the Milkshake app, foc
 🎨 **Goal:** Improve the front-end experience, particularly for user interaction flows.
 
 ### Tasks:
-- [ ] **Carousel.html** improvements:
+- [X ] **Carousel.html** improvements:
   - Add picture flipping interaction (front for photo, back for bio/info).
   - Enable “Yes/No” buttons to record interest.
   - Add animations or transitions for smoother experience.
-- [ ] Improve responsiveness and mobile friendliness.
+- [ X] Improve responsiveness and mobile friendliness.
 - [ ] Add loading states or progress indicators where needed.
 
 ---
@@ -40,7 +40,7 @@ This roadmap outlines the structured development plan for the Milkshake app, foc
 - [ ] **“Liked” Profiles Page**:
   - New page to show users they’ve liked.
   - Query DynamoDB with user’s likes.
-- [ ] Profile management (update/delete profile).
+- [x ] Profile management (update/delete profile).
 - [ ] Guest user restrictions/experience enhancement.
 
 ---
