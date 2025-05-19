@@ -9,9 +9,7 @@
 </head>
 <body>
   <div class="navbar">
-    <a href="index.html">Home</a>
     <a href="carousel.html">Missed Connections</a>
-    <a href="confirm-profile.html">Verify Email</a>
   </div>
   <h1>Sign In</h1>
   <form id="signin-form">
@@ -20,7 +18,16 @@
     <button type="submit">Sign In</button>
   </form>
 <a href="forgot-password.html" class="nav-link">Forgot Password</a>
+<a href="confirm-profile.html" class="nav-link">Confirm Profile</a>
+ <a href="create-profile.html" class="nav-link">Create Profile</a>
+  <button id="signout-btn" class="nav-link">Sign Out</button>
+  <div id="signout-message"></div>
+  
   <div id="status-message"></div>
+<div id="status-message"></div>
+  
+  <div id="status-message"></div>
+
 
   <script type="module">
     import { Auth } from 'aws-amplify';
