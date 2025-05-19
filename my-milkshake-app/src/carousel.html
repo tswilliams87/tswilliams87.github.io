@@ -119,6 +119,7 @@ function swipe(direction) {
 document.getElementById('yes-zone').addEventListener('click', () => swipe('yes'));
 document.getElementById('nope-zone').addEventListener('click', () => swipe('nope'));
 document.getElementById('flip-zone').addEventListener('click', () => {
+  const card = document.getElementById('card');
   card.classList.toggle('flipped');
 });
 
