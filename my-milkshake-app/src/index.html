@@ -37,6 +37,7 @@ import { updateUserLocationToAPI } from './main.js';
 
     Auth.currentAuthenticatedUser()
       .then(user => {
+        window.location.href = 'carousel.html';
         console.log('User session:', user);
         // Optionally redirect to carousel or dashboard if already signed in
       })
