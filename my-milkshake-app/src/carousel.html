@@ -132,9 +132,10 @@ updateUserLocationToAPI();
     const email = user.attributes.email;
 
     navbar.innerHTML = `
+    <span style="color: #00ff22; margin-left: 15px; margin-right: auto;">Signed in as: ${email}</span>
       <a href="edit-profile.html">Profile</a>
       <button class="nav-link" id="signout-btn">Sign Out</button>
-      <span style="color: #00ff22; margin-left: auto; margin-right: 15px;">Signed in as: ${email}</span>
+      
     `;
 
     document.getElementById('signout-btn')?.addEventListener('click', async () => {
