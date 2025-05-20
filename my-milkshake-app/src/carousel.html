@@ -74,6 +74,7 @@ async function loadProfiles() {
   } catch (error) {
     console.error('Failed to load profiles:', error);
   }
+  
 }
 
 async function showProfile() {
@@ -118,8 +119,33 @@ document.getElementById('flip-zone').addEventListener('click', () => {
   card.classList.toggle('flipped');
 });
 
+
+
+
+
 loadProfiles();
 updateUserLocationToAPI();
+
+(async () => {
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    const email = user.attributes.email;
+
+    const navbar = document.querySelector('.navbar');
+    if (navbar && email) {
+      const emailDisplay = document.createElement('span');
+      emailDisplay.textContent = `Signed in as: ${email}`;
+      emailDisplay.style.color = '#00ff22';
+      emailDisplay.style.marginLeft = 'auto';
+      emailDisplay.style.marginRight = '15px';
+      navbar.appendChild(emailDisplay);
+    }
+  } catch (err) {
+    console.error('Error loading user email:', err);
+  }
+})();
+
+
 </script>
 
  </body>
