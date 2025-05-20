@@ -11,7 +11,7 @@
   <div class="navbar">
     <a href="signin.html">Sign-In</a>
     <a href="carousel.html">Missed Connections</a>
-    <button id="signout-btn" class="nav-link">Sign Out</button>
+   
 
   </div>
   <h1>Confirm Your Account</h1>
@@ -49,12 +49,7 @@
       }
     });
     document.getElementById('signout-btn')?.addEventListener('click', async () => {
-  try {
-    await Auth.signOut();
-    window.location.href = 'signin.html';
-  } catch (error) {
-    console.error('Sign out failed:', error);
-  }
+ 
 });
   </script>
 </body>

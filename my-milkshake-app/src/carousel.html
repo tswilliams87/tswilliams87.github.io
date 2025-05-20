@@ -8,19 +8,18 @@
   </title>
   <link href="/styles.css" rel="stylesheet"/>
   <link href="/favicon.png" rel="icon" type="image/png"/>
+  <style>
+    body {
+      padding-top: 60px; /* Adjust according to navbar height */
+    }
+  </style>
  </head>
  <body>
-  <div class="navbar">
-<a href="signin.html">
-    Sign-In
-   </a>
-   <a href="edit-profile.html">
-    Profile
-   </a>
+ 
 
-   <button class="nav-link" id="signout-btn">
-    Sign Out
-   </button>
+
+  <div class="navbar" id="navbar">
+    <!-- Dynamic nav links will be injected here -->
   </div>
   <div class="profile-container">
    <div class="card" id="card">
@@ -127,21 +126,31 @@ loadProfiles();
 updateUserLocationToAPI();
 
 (async () => {
+  const navbar = document.getElementById('navbar');
   try {
     const user = await Auth.currentAuthenticatedUser();
     const email = user.attributes.email;
 
-    const navbar = document.querySelector('.navbar');
-    if (navbar && email) {
-      const emailDisplay = document.createElement('span');
-      emailDisplay.textContent = `Signed in as: ${email}`;
-      emailDisplay.style.color = '#00ff22';
-      emailDisplay.style.marginLeft = 'auto';
-      emailDisplay.style.marginRight = '15px';
-      navbar.appendChild(emailDisplay);
-    }
-  } catch (err) {
-    console.error('Error loading user email:', err);
+    navbar.innerHTML = `
+      <a href="edit-profile.html">Profile</a>
+      <button class="nav-link" id="signout-btn">Sign Out</button>
+      <span style="color: #00ff22; margin-left: auto; margin-right: 15px;">Signed in as: ${email}</span>
+    `;
+
+    document.getElementById('signout-btn')?.addEventListener('click', async () => {
+      try {
+        await Auth.signOut();
+        window.location.href = 'index.html';
+      } catch (error) {
+        console.error('Sign out failed:', error);
+      }
+    });
+  } catch {
+    navbar.innerHTML = `
+      <a href="signin.html">Sign-In</a>
+      <a href="confirm-profile.html">Confirm Email</a>
+      <a href="create-profile.html">Create Profile</a>
+    `;
   }
 })();
 

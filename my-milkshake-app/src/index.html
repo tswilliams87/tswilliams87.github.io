@@ -10,19 +10,16 @@
 </head>
 <body>
 
-    
+    <div class="navbar" id="navbar">
+    <!-- Dynamic nav links will be injected here -->
+  </div>
 
     <div class="welcome-container">
       <h1>Missed Connections</h1><p>The start to a whole new way of connecting again for the first time.</p> 
       
       <a href="carousel.html">Find Them Again</a>
     </div>
-    <div class="navbar">
-      <a href="create-profile.html">Create Profile</a>
-      
-  
-     
-      <a href="signin.html">Sign-In</a>
+   
       
 
   <script type="module">
@@ -54,7 +51,32 @@ import { updateUserLocationToAPI } from './main.js';
   }
 });
 updateUserLocationToAPI();
+(async () => {
+  const navbar = document.getElementById('navbar');
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    const email = user.attributes.email;
 
+    navbar.innerHTML = `
+      <a href="edit-profile.html">Profile</a>
+      <button class="nav-link" id="signout-btn">Sign Out</button>
+      <span style="color: #00ff22; margin-left: auto; margin-right: 15px;">Signed in as: ${email}</span>
+    `;
+
+    document.getElementById('signout-btn')?.addEventListener('click', async () => {
+      try {
+        await Auth.signOut();
+        window.location.href = 'index.html';
+      } catch (error) {
+        console.error('Sign out failed:', error);
+      }
+    });
+  } catch {
+    navbar.innerHTML = `
+      <a href="create-profile.html">Create Profile</a>
+    `;
+  }
+})();
 
   </script>
 </body>
