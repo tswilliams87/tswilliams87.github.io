@@ -15,37 +15,27 @@
   </style>
  </head>
  <body>
- 
-
-
   <div class="navbar" id="navbar">
     <!-- Dynamic nav links will be injected here -->
   </div>
   <div class="profile-container">
    <div class="card" id="card">
     <div class="card-inner">
-     
-    <div class="card-face front">
-     <img alt="Profile Image" id="profile-img" src=""/>
-    </div>
-    <div class="card-face back">
-     <div class="profile-bio" id="profile-bio">
-      <h1 id="profile-name">
-      </h1>
-      <p id="profile-fav">
-      </p>
-      <p id="profile-bio-text">
-      </p>
+     <div class="card-face front">
+      <img alt="Profile Image" id="profile-img" src=""/>
+     </div>
+     <div class="card-face back">
+      <div class="profile-bio" id="profile-bio">
+       <h1 id="profile-name"></h1>
+       <p id="profile-fav"></p>
+       <p id="profile-bio-text"></p>
+      </div>
      </div>
     </div>
    </div>
-   </div>
-   <div class="swipe-zone left" id="nope-zone">
-   </div>
-   <div class="flip-zone" id="flip-zone">
-   </div>
-   <div class="swipe-zone right" id="yes-zone">
-   </div>
+   <div class="swipe-zone left" id="nope-zone"></div>
+   <div class="flip-zone" id="flip-zone"></div>
+   <div class="swipe-zone right" id="yes-zone"></div>
   </div>
  <script type="module">
 import { fetchProfiles } from './api.js';
@@ -57,6 +47,7 @@ Amplify.configure(awsconfig);
 
 let profiles = [];
 let currentIndex = 0;
+const imageCache = {};
 
 const card = document.getElementById('card');
 const imgEl = document.getElementById('profile-img');
@@ -73,7 +64,25 @@ async function loadProfiles() {
   } catch (error) {
     console.error('Failed to load profiles:', error);
   }
-  
+}
+
+async function getImageUrl(s3Key) {
+  if (!imageCache[s3Key]) {
+    try {
+      imageCache[s3Key] = await Storage.get(s3Key, { level: 'public' });
+    } catch (err) {
+      console.error('Image load error:', s3Key, err);
+      imageCache[s3Key] = 'https://via.placeholder.com/600x800';
+    }
+  }
+  return imageCache[s3Key];
+}
+
+async function preloadNextImage() {
+  const nextIndex = (currentIndex + 1) % profiles.length;
+  const nextProfile = profiles[nextIndex];
+  const nextKey = nextProfile.picture?.S || `profiles/${nextProfile.filename?.S || ''}`;
+  if (nextKey) getImageUrl(nextKey); // Trigger cache
 }
 
 async function showProfile() {
@@ -87,18 +96,13 @@ async function showProfile() {
   const s3Key = profile.picture?.S || `profiles/${profile.filename?.S || ''}`;
   const bio = profile.bio?.S || 'No bio available';
 
-
   nameEl.textContent = name;
   favEl.textContent = fav;
   bioEl.textContent = bio;
 
-  try {
-    const url = await Storage.get(s3Key, { level: 'public' });
-    imgEl.src = url;
-  } catch (err) {
-    console.error('Image load error:', s3Key, err);
-    imgEl.src = 'https://via.placeholder.com/600x800';
-  }
+  const url = await getImageUrl(s3Key);
+  imgEl.src = url;
+  preloadNextImage();
 }
 
 function swipe(direction) {
@@ -118,10 +122,6 @@ document.getElementById('flip-zone').addEventListener('click', () => {
   card.classList.toggle('flipped');
 });
 
-
-
-
-
 loadProfiles();
 updateUserLocationToAPI();
 
@@ -135,7 +135,6 @@ updateUserLocationToAPI();
     <span style="color: #00ff22; margin-left: 15px; margin-right: auto;">Signed in as: ${email}</span>
       <a href="edit-profile.html">Profile</a>
       <button class="nav-link" id="signout-btn">Sign Out</button>
-      
     `;
 
     document.getElementById('signout-btn')?.addEventListener('click', async () => {
@@ -154,9 +153,6 @@ updateUserLocationToAPI();
     `;
   }
 })();
-
-
 </script>
-
  </body>
 </html>
