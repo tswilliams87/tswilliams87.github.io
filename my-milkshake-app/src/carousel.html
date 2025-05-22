@@ -82,8 +82,17 @@ async function preloadNextImage() {
   const nextIndex = (currentIndex + 1) % profiles.length;
   const nextProfile = profiles[nextIndex];
   const nextKey = nextProfile.picture?.S || `profiles/${nextProfile.filename?.S || ''}`;
-  if (nextKey) getImageUrl(nextKey); // Trigger cache
+  if (!nextKey) return;
+
+  try {
+    const url = await getImageUrl(nextKey);
+    const img = new Image();
+    img.src = url;
+  } catch (error) {
+    console.error('Error preloading image:', error);
+  }
 }
+
 
 async function showProfile() {
   if (currentIndex >= profiles.length) {
